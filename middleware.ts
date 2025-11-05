@@ -13,7 +13,6 @@ async function hmacSha256Base64Url(secret: string, data: string) {
   );
   const sig = await crypto.subtle.sign("HMAC", key, enc.encode(data));
 
-  // ⬇️ Remplace le spread par une boucle pour compat TS/target
   const bytes = new Uint8Array(sig);
   let binary = "";
   for (let i = 0; i < bytes.length; i++) {
@@ -35,7 +34,6 @@ function bytesToHex(buf: ArrayBuffer) {
 async function sha256HexWeb(input: string) {
   const enc = new TextEncoder();
   const buf = await crypto.subtle.digest("SHA-256", enc.encode(input));
-  // ⬇️ Remplace la conversion avec spread par une boucle
   return bytesToHex(buf);
 }
 
@@ -51,6 +49,8 @@ async function verifySessionEdge(cookieValue: string | undefined, secret: string
 
 export async function middleware(req: NextRequest) {
   const { pathname } = req.nextUrl;
+
+  // chemins publics autorisés
   if (
     pathname.startsWith("/login") ||
     pathname.startsWith("/api/auth-email") ||
@@ -83,5 +83,8 @@ export async function middleware(req: NextRequest) {
 }
 
 export const config = {
-  matcher: ["/((?!_next|api/auth-email|favicon|public).*)"],
+  matcher: [
+    "/", // ✅ protège la racine
+    "/((?!_next/|favicon.ico|robots.txt|sitemap.xml|login|api/auth-email).*)"
+  ],
 };
