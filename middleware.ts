@@ -1,4 +1,3 @@
-
 import { NextResponse } from "next/server";
 import type { NextRequest } from "next/server";
 import allow from "./lib/allowlist.json";
@@ -13,14 +12,31 @@ async function hmacSha256Base64Url(secret: string, data: string) {
     ["sign"]
   );
   const sig = await crypto.subtle.sign("HMAC", key, enc.encode(data));
-  const b64 = btoa(String.fromCharCode(...new Uint8Array(sig)));
-  return b64.replace(/\+/g, "-").replace(/\//g, "_").replace(/=+$/,"");
+
+  // ⬇️ Remplace le spread par une boucle pour compat TS/target
+  const bytes = new Uint8Array(sig);
+  let binary = "";
+  for (let i = 0; i < bytes.length; i++) {
+    binary += String.fromCharCode(bytes[i]);
+  }
+  const b64 = btoa(binary);
+  return b64.replace(/\+/g, "-").replace(/\//g, "_").replace(/=+$/, "");
+}
+
+function bytesToHex(buf: ArrayBuffer) {
+  const bytes = new Uint8Array(buf);
+  let hex = "";
+  for (let i = 0; i < bytes.length; i++) {
+    hex += bytes[i].toString(16).padStart(2, "0");
+  }
+  return hex;
 }
 
 async function sha256HexWeb(input: string) {
   const enc = new TextEncoder();
   const buf = await crypto.subtle.digest("SHA-256", enc.encode(input));
-  return [...new Uint8Array(buf)].map(b=>b.toString(16).padStart(2,"0")).join("");
+  // ⬇️ Remplace la conversion avec spread par une boucle
+  return bytesToHex(buf);
 }
 
 async function verifySessionEdge(cookieValue: string | undefined, secret: string) {
@@ -35,7 +51,13 @@ async function verifySessionEdge(cookieValue: string | undefined, secret: string
 
 export async function middleware(req: NextRequest) {
   const { pathname } = req.nextUrl;
-  if (pathname.startsWith("/login") || pathname.startsWith("/api/auth-email") || pathname.startsWith("/_next") || pathname.startsWith("/favicon") || pathname.startsWith("/public")) {
+  if (
+    pathname.startsWith("/login") ||
+    pathname.startsWith("/api/auth-email") ||
+    pathname.startsWith("/_next") ||
+    pathname.startsWith("/favicon") ||
+    pathname.startsWith("/public")
+  ) {
     return NextResponse.next();
   }
 
