@@ -1,4 +1,4 @@
-import allowlist from "../../../lib/allowlist.json";
+import allowlist from "../../lib/allowlist.json";
 
 export default function handler(req, res) {
   if (req.method !== "POST") return res.status(405).end();
