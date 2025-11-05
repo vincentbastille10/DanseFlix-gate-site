@@ -1,8 +1,11 @@
 import { NextResponse } from "next/server";
 import type { NextRequest } from "next/server";
-import allow from "./lib/allowlist.json";
+import allowData from "./lib/allowlist.json";
 
-// --- HMAC utilitaire ---
+// Normalise l'allowlist (emails ou hashes)
+const ALLOW = (allowData as string[]).map((s) => s.trim().toLowerCase());
+
+// --- HMAC utilitaire (Edge WebCrypto) ---
 async function hmacSha256Base64Url(secret: string, data: string) {
   const enc = new TextEncoder();
   const key = await crypto.subtle.importKey(
@@ -20,18 +23,27 @@ async function hmacSha256Base64Url(secret: string, data: string) {
   return b64.replace(/\+/g, "-").replace(/\//g, "_").replace(/=+$/, "");
 }
 
-// --- SHA utilitaire ---
+// --- SHA utilitaire (hex) ---
 function bytesToHex(buf: ArrayBuffer) {
   const bytes = new Uint8Array(buf);
   let hex = "";
   for (let i = 0; i < bytes.length; i++) hex += bytes[i].toString(16).padStart(2, "0");
   return hex;
 }
-
 async function sha256HexWeb(input: string) {
   const enc = new TextEncoder();
   const buf = await crypto.subtle.digest("SHA-256", enc.encode(input));
   return bytesToHex(buf);
+}
+
+// --- base64url → UTF-8 (sans Buffer) ---
+function b64urlToUtf8(b64url: string) {
+  const padLen = (4 - (b64url.length % 4)) % 4;
+  const b64 = b64url.replace(/-/g, "+").replace(/_/g, "/") + "=".repeat(padLen);
+  const bin = atob(b64);
+  const bytes = new Uint8Array(bin.length);
+  for (let i = 0; i < bin.length; i++) bytes[i] = bin.charCodeAt(i);
+  return new TextDecoder().decode(bytes);
 }
 
 // --- Vérifie la session stockée dans le cookie ---
@@ -42,35 +54,28 @@ async function verifySessionEdge(cookieValue: string | undefined, secret: string
   const expected = await hmacSha256Base64Url(secret, payload);
   if (sig !== expected) return null;
   try {
-    return Buffer.from(payload, "base64url").toString("utf8");
+    return b64urlToUtf8(payload); // e-mail en clair
   } catch {
     return null;
   }
 }
 
-// --- Middleware principal ---
 export async function middleware(req: NextRequest) {
   const { pathname } = req.nextUrl;
 
-  // ✅ Chemins publics non protégés
+  // ✅ chemins publics non protégés
   if (
     pathname.startsWith("/login") ||
-    pathname.startsWith("/api") ||          // exclut toutes les routes API
+    pathname.startsWith("/api") ||          // exclut TOUTES les API
     pathname.startsWith("/_next") ||
-    pathname.startsWith("/favicon") ||
-    pathname.startsWith("/public") ||
-    pathname.endsWith(".png") ||
-    pathname.endsWith(".jpg") ||
-    pathname.endsWith(".jpeg") ||
-    pathname.endsWith(".webp") ||
-    pathname.endsWith(".mp3") ||
-    pathname.endsWith(".mp4") ||
-    pathname.endsWith(".json")
+    pathname === "/favicon.ico" ||
+    pathname === "/robots.txt" ||
+    pathname === "/sitemap.xml" ||
+    pathname.startsWith("/public")
   ) {
     return NextResponse.next();
   }
 
-  // --- Vérifie la session ---
   const secret = process.env.AUTH_SECRET || "";
   const cookie = req.cookies.get("dfx")?.value;
   const email = await verifySessionEdge(cookie, secret);
@@ -80,12 +85,13 @@ export async function middleware(req: NextRequest) {
     return NextResponse.redirect(url);
   }
 
-  // --- Vérifie la présence dans l’allowlist ---
   const norm = email.trim().toLowerCase();
   const hash = await sha256HexWeb(norm);
-  const ok = (allow as string[]).some(v => {
-    const val = v.trim().toLowerCase();
-    return val === norm || val === hash;
+
+  // ✅ autorise si allowlist contient le hash OU l'email normalisé
+  const ok = ALLOW.some((v) => {
+    const x = v.trim().toLowerCase();
+    return x === norm || x === hash;
   });
 
   if (!ok) {
@@ -94,11 +100,9 @@ export async function middleware(req: NextRequest) {
     return NextResponse.redirect(url);
   }
 
-  // ✅ Si tout est bon : accès autorisé
   return NextResponse.next();
 }
 
-// --- Configuration du middleware ---
 export const config = {
   matcher: [
     "/", // protège la racine
