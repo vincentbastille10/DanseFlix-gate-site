@@ -1,28 +1,14 @@
-
+// lib/crypto.ts
 import crypto from "crypto";
 
-export function sha256Hex(input: string) {
-  return crypto.createHash("sha256").update(input).digest("hex");
+/** SHA-256 -> hex (toujours minuscules) */
+export function sha256Hex(input: string): string {
+  return crypto.createHash("sha256").update(input, "utf8").digest("hex");
 }
 
-// signature HMAC pour éviter le cookie falsifié
-export function sign(value: string, secret: string) {
-  return crypto.createHmac("sha256", secret).update(value).digest("base64url");
-}
-
-export function makeSession(email: string, secret: string) {
-  const norm = email.trim().toLowerCase();
-  const payload = Buffer.from(norm).toString("base64url");
-  const sig = sign(payload, secret);
+/** Session cookie: payload.base64url + "." + HMAC(base64url) */
+export function makeSession(email: string, secret: string): string {
+  const payload = Buffer.from(email, "utf8").toString("base64url");
+  const sig = crypto.createHmac("sha256", secret).update(payload).digest("base64url");
   return `${payload}.${sig}`;
-}
-
-export function verifySession(cookieValue: string | undefined, secret: string) {
-  if (!cookieValue) return null;
-  const [payload, sig] = cookieValue.split(".");
-  if (!payload || !sig) return null;
-  const expected = sign(payload, secret);
-  if (sig !== expected) return null;
-  const email = Buffer.from(payload, "base64url").toString("utf8");
-  return email;
 }
