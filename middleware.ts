@@ -43,6 +43,8 @@ async function verifySessionEdge(cookieValue: string | undefined, secret: string
   if (!payload || !sig) return null;
   const expected = await hmacSha256Base64Url(secret, payload);
   if (sig !== expected) return null;
+  // NOTE: Buffer est généralement dispo dans le middleware Next 14.
+  // Si besoin, on pourra basculer vers un decodeur base64url web.
   const email = Buffer.from(payload, "base64url").toString("utf8");
   return email;
 }
@@ -53,9 +55,11 @@ export async function middleware(req: NextRequest) {
   // chemins publics autorisés
   if (
     pathname.startsWith("/login") ||
-    pathname.startsWith("/api/auth-email") ||
+    pathname.startsWith("/api") ||          // ✅ exclut TOUTES les routes API
     pathname.startsWith("/_next") ||
-    pathname.startsWith("/favicon") ||
+    pathname === "/favicon.ico" ||
+    pathname === "/robots.txt" ||
+    pathname === "/sitemap.xml" ||
     pathname.startsWith("/public")
   ) {
     return NextResponse.next();
@@ -85,6 +89,7 @@ export async function middleware(req: NextRequest) {
 export const config = {
   matcher: [
     "/", // ✅ protège la racine
-    "/((?!_next/|favicon.ico|robots.txt|sitemap.xml|login|api/auth-email).*)"
+    // ✅ protège tout sauf API, assets Next, et pages publiques listées ci-dessus
+    "/((?!api/|api$|_next/|favicon.ico|robots.txt|sitemap.xml|login).*)",
   ],
 };
