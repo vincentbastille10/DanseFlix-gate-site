@@ -39,33 +39,28 @@ export default function Home() {
         />
       </Head>
 
-      <body
-        className="bg-gradient-to-b from-midnight via-slate-900 to-black text-white font-sans min-h-screen flex flex-col items-center"
-        onContextMenu={(e) => e.preventDefault()} // empêche clic droit / téléchargement
-      >
+      <body className="bg-gradient-to-b from-midnight via-slate-900 to-black text-white font-sans min-h-screen flex flex-col items-center">
         {/* Header */}
-        <header className="text-center py-12 select-none">
+        <header className="text-center py-12">
           <img
             src="https://i.postimg.cc/jjTjB78d/logo-delph-trans-copie.jpg"
             alt="Logo Centre de Danse Delphine Letort"
-            className="mx-auto w-56 drop-shadow-2xl pointer-events-none"
+            className="mx-auto w-56 drop-shadow-2xl"
           />
-          <h1 className="text-[12vw] sm:text-[8vw] font-extrabold mt-6 bg-gradient-to-r from-rosefluo via-violetsoft to-rosefluo bg-clip-text text-transparent tracking-wide animate-pulse select-none">
+          <h1 className="text-[12vw] sm:text-[8vw] font-extrabold mt-6 bg-gradient-to-r from-rosefluo via-violetsoft to-rosefluo bg-clip-text text-transparent tracking-wide animate-pulse">
             DanseFlix
           </h1>
-          <p className="mt-3 text-lg text-gray-300 italic select-none">
-            La Belle au bois dormant — Spectacle 2025
-          </p>
+          <p className="mt-3 text-lg text-gray-300 italic">La Belle au bois dormant — Spectacle 2025</p>
         </header>
 
         {/* Affiche principale */}
-        <section className="w-full max-w-3xl px-4 mb-10 select-none">
+        <section className="w-full max-w-3xl px-4 mb-10">
           <figure className="rounded-2xl overflow-hidden shadow-[0_20px_55px_rgba(0,0,0,0.4)] border border-slate-800">
             <img
               src="https://i.postimg.cc/vmXGjSxR/La-Belle-Affiche-copie.jpg"
               alt="Affiche du spectacle La Belle au Bois Dormant – Delphine Letort"
               loading="lazy"
-              className="w-full h-auto object-cover pointer-events-none"
+              className="w-full h-auto object-cover"
             />
             <figcaption className="text-center text-gray-400 text-sm py-2 bg-slate-900/60">
               Samedi 28 & Dimanche 29 juin 2025 — Salle des Concerts du Mans
@@ -74,10 +69,7 @@ export default function Home() {
         </section>
 
         {/* Vidéos */}
-        <main
-          id="contenu"
-          className="flex flex-col items-center w-full max-w-5xl gap-10 px-4 pb-20 select-none"
-        >
+        <main id="contenu" className="flex flex-col items-center w-full max-w-5xl gap-10 px-4 pb-20">
           {/* Samedi */}
           <section className="w-full bg-gradient-to-r from-slate-800/70 to-slate-900/60 backdrop-blur-md rounded-2xl shadow-soft p-6 border border-slate-700/50">
             <h2 className="text-2xl font-semibold mb-4 text-center text-rosefluo">
@@ -85,12 +77,11 @@ export default function Home() {
             </h2>
             <div className="aspect-video rounded-xl overflow-hidden border border-slate-700">
               <iframe
-                src="https://www.youtube.com/embed/AI_UteIH42U?rel=0&vq=hd1080&modestbranding=1&controls=1&disablekb=1"
+                src="https://www.youtube.com/embed/AI_UteIH42U?rel=0&vq=hd1080&modestbranding=1&controls=1"
                 title="DanseFlix Samedi"
                 className="w-full h-full"
-                allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture"
+                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
                 allowFullScreen
-                sandbox="allow-same-origin allow-scripts allow-presentation" // bloque téléchargement
               />
             </div>
           </section>
@@ -102,12 +93,11 @@ export default function Home() {
             </h2>
             <div className="aspect-video rounded-xl overflow-hidden border border-slate-700">
               <iframe
-                src="https://www.youtube.com/embed/Ky6x74z20N8?rel=0&vq=hd1080&modestbranding=1&controls=1&disablekb=1"
+                src="https://www.youtube.com/embed/Ky6x74z20N8?rel=0&vq=hd1080&modestbranding=1&controls=1"
                 title="DanseFlix Dimanche"
                 className="w-full h-full"
-                allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture"
+                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
                 allowFullScreen
-                sandbox="allow-same-origin allow-scripts allow-presentation"
               />
             </div>
           </section>
@@ -125,7 +115,7 @@ export default function Home() {
         </main>
 
         {/* Footer */}
-        <footer className="text-center py-8 text-gray-400 border-t border-slate-800 w-full mt-auto select-none">
+        <footer className="text-center py-8 text-gray-400 border-t border-slate-800 w-full mt-auto">
           © 2025 Centre de Danse Delphine Letort · Réalisation{" "}
           <span className="text-rosefluo">Spectra Media</span>
         </footer>
