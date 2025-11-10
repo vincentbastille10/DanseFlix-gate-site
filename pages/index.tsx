@@ -1,125 +1,148 @@
-import Head from "next/head";
-
-export default function Home() {
-  return (
-    <>
-      <Head>
-        <title>DanseFlix — La Belle au Bois Dormant</title>
-        <meta
-          name="description"
-          content="DanseFlix — Les captations HD du spectacle 'La Belle au bois dormant' du Centre de Danse Delphine Letort."
-        />
-        <meta property="og:title" content="DanseFlix — La Belle au Bois Dormant" />
-        <meta property="og:description" content="Captations HD de l'École de danse Delphine Letort — Samedi et Dimanche." />
-        <meta property="og:type" content="website" />
-        <link rel="icon" href="https://i.postimg.cc/jjTjB78d/logo-delph-trans-copie.jpg" />
-        <script src="https://cdn.tailwindcss.com"></script>
-        <script
-          dangerouslySetInnerHTML={{
-            __html: `
-              tailwind.config = {
-                theme: {
-                  extend: {
-                    colors: {
-                      rosefluo: '#ff6fb3',
-                      violetsoft: '#a78bfa',
-                      midnight: '#0f0a25',
-                    },
-                    fontFamily: {
-                      sans: ['Inter', 'system-ui', 'sans-serif']
-                    },
-                    boxShadow: {
-                      soft: '0 15px 40px rgba(0,0,0,0.3)'
-                    }
-                  }
-                }
-              }
-            `,
-          }}
-        />
-      </Head>
-
-      <body className="bg-gradient-to-b from-midnight via-slate-900 to-black text-white font-sans min-h-screen flex flex-col items-center">
-        {/* Header */}
-        <header className="text-center py-12">
-          <img
-            src="https://i.postimg.cc/jjTjB78d/logo-delph-trans-copie.jpg"
-            alt="Logo Centre de Danse Delphine Letort"
-            className="mx-auto w-56 drop-shadow-2xl"
-          />
-          <h1 className="text-[12vw] sm:text-[8vw] font-extrabold mt-6 bg-gradient-to-r from-rosefluo via-violetsoft to-rosefluo bg-clip-text text-transparent tracking-wide animate-pulse">
-            DanseFlix
-          </h1>
-          <p className="mt-3 text-lg text-gray-300 italic">La Belle au bois dormant — Spectacle 2025</p>
-        </header>
-
-        {/* Affiche principale */}
-        <section className="w-full max-w-3xl px-4 mb-10">
-          <figure className="rounded-2xl overflow-hidden shadow-[0_20px_55px_rgba(0,0,0,0.4)] border border-slate-800">
-            <img
-              src="https://i.postimg.cc/vmXGjSxR/La-Belle-Affiche-copie.jpg"
-              alt="Affiche du spectacle La Belle au Bois Dormant – Delphine Letort"
-              loading="lazy"
-              className="w-full h-auto object-cover"
-            />
-            <figcaption className="text-center text-gray-400 text-sm py-2 bg-slate-900/60">
-              Samedi 28 & Dimanche 29 juin 2025 — Salle des Concerts du Mans
-            </figcaption>
-          </figure>
-        </section>
-
-        {/* Vidéos */}
-        <main id="contenu" className="flex flex-col items-center w-full max-w-5xl gap-10 px-4 pb-20">
-          {/* Samedi */}
-          <section className="w-full bg-gradient-to-r from-slate-800/70 to-slate-900/60 backdrop-blur-md rounded-2xl shadow-soft p-6 border border-slate-700/50">
-            <h2 className="text-2xl font-semibold mb-4 text-center text-rosefluo">
-              Samedi — La Belle au bois dormant
-            </h2>
-            <div className="aspect-video rounded-xl overflow-hidden border border-slate-700">
-              <iframe
-                src="https://www.youtube.com/embed/AI_UteIH42U?rel=0&vq=hd1080&modestbranding=1&controls=1"
-                title="DanseFlix Samedi"
-                className="w-full h-full"
-                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-                allowFullScreen
-              />
-            </div>
-          </section>
-
-          {/* Dimanche */}
-          <section className="w-full bg-gradient-to-r from-slate-800/70 to-slate-900/60 backdrop-blur-md rounded-2xl shadow-soft p-6 border border-slate-700/50">
-            <h2 className="text-2xl font-semibold mb-4 text-center text-rosefluo">
-              Dimanche — La Belle au bois dormant
-            </h2>
-            <div className="aspect-video rounded-xl overflow-hidden border border-slate-700">
-              <iframe
-                src="https://www.youtube.com/embed/Ky6x74z20N8?rel=0&vq=hd1080&modestbranding=1&controls=1"
-                title="DanseFlix Dimanche"
-                className="w-full h-full"
-                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-                allowFullScreen
-              />
-            </div>
-          </section>
-
-          {/* Bouton école */}
-          <div className="text-center mt-10">
-            <a
-              href="https://www.dansedelphineletort.com/"
-              target="_blank"
-              className="inline-block bg-gradient-to-r from-violetsoft to-rosefluo text-black font-semibold px-6 py-3 rounded-full shadow-lg hover:scale-105 transition-transform"
-            >
-              Visiter le site de l’école
-            </a>
+<!doctype html>
+<html lang="fr">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1" />
+<title>DanseFlix — La Belle au Bois Dormant</title>
+<link rel="preconnect" href="https://fonts.googleapis.com" crossorigin>
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;700;900&display=swap" rel="stylesheet">
+<style>
+  :root{--bg:#0B0A1A;--pink:#ff6fb3;--violet:#a78bfa;--cyan:#00d1ff;--glass:rgba(255,255,255,.06)}
+  *{box-sizing:border-box} html,body{height:100%}
+  body{margin:0;font-family:Inter,system-ui,sans-serif;color:#fff;background:
+    radial-gradient(1200px 800px at 8% 10%, rgba(255,111,179,.14), transparent 50%),
+    radial-gradient(1100px 700px at 92% 20%, rgba(167,139,250,.12), transparent 55%),
+    radial-gradient(1000px 700px at 50% 95%, rgba(0,209,255,.10), transparent 60%),#0B0A1A}
+  .wrap{max-width:1200px;margin:0 auto;padding:28px}
+  h1{margin:8px 0 18px;font-size:clamp(40px,10vw,96px);letter-spacing:-.02em;text-transform:uppercase;
+     background:linear-gradient(90deg,var(--pink),var(--violet),var(--cyan));-webkit-background-clip:text;background-clip:text;color:transparent}
+  .grid{display:grid;gap:26px;grid-template-columns:1fr} @media(min-width:960px){.grid{grid-template-columns:1fr 1fr}}
+  .card{border:1px solid rgba(255,255,255,.12);border-radius:20px;background:var(--glass);backdrop-filter:blur(10px);overflow:hidden}
+  .head{padding:16px 18px;font-weight:700}
+  .player{position:relative;aspect-ratio:16/9;background:#000}
+  .poster{position:absolute;inset:0;background-size:cover;background-position:center}
+  .poster::after{content:"";position:absolute;inset:0;background:radial-gradient(75% 55% at 50% 50%, transparent 60%, rgba(0,0,0,.35))}
+  .play{position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);width:90px;height:90px;border-radius:999px;
+        background:linear-gradient(90deg,var(--violet),var(--pink));box-shadow:0 14px 40px rgba(0,0,0,.45);display:grid;place-items:center;cursor:pointer}
+  .play svg{width:34px;height:34px;fill:#000}
+  iframe{position:absolute;inset:0;width:100%;height:100%;border:0;display:none}
+  .ctrls{position:absolute;left:12px;right:12px;bottom:10px;display:flex;gap:10px;align-items:center;opacity:0;transition:opacity .25s}
+  .player:hover .ctrls{opacity:1}
+  .btn{background:rgba(0,0,0,.55);border:1px solid rgba(255,255,255,.18);border-radius:12px;padding:8px 12px;font-size:.85rem;cursor:pointer;user-select:none}
+  .prog{flex:1;height:6px;background:rgba(255,255,255,.18);border-radius:9999px;position:relative;cursor:pointer}
+  .bar{position:absolute;left:0;top:0;bottom:0;width:0%;background:linear-gradient(90deg,var(--violet),var(--pink));border-radius:9999px}
+</style>
+</head>
+<body oncontextmenu="return false">
+  <div class="wrap">
+    <h1>DanseFlix</h1>
+    <div class="grid">
+      <!-- Samedi -->
+      <div class="card">
+        <div class="head">Samedi — La Belle au bois dormant</div>
+        <div class="player" data-yt="AI_UteIH42U">
+          <div class="poster" style="background-image:url('https://img.youtube.com/vi/AI_UteIH42U/maxresdefault.jpg')"></div>
+          <button class="play" aria-label="Lire">
+            <svg viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg>
+          </button>
+          <iframe allow="accelerometer; encrypted-media; gyroscope; picture-in-picture" allowfullscreen
+                  sandbox="allow-same-origin allow-scripts allow-presentation"></iframe>
+          <div class="ctrls">
+            <div class="btn js-toggle">Lecture</div>
+            <div class="btn js-mute">Son</div>
+            <div class="prog js-prog"><div class="bar"></div></div>
+            <div class="btn js-full">Plein écran</div>
           </div>
-        </main>
+        </div>
+      </div>
+      <!-- Dimanche -->
+      <div class="card">
+        <div class="head">Dimanche — La Belle au bois dormant</div>
+        <div class="player" data-yt="Ky6x74z20N8">
+          <div class="poster" style="background-image:url('https://img.youtube.com/vi/Ky6x74z20N8/maxresdefault.jpg')"></div>
+          <button class="play" aria-label="Lire">
+            <svg viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg>
+          </button>
+          <iframe allow="accelerometer; encrypted-media; gyroscope; picture-in-picture" allowfullscreen
+                  sandbox="allow-same-origin allow-scripts allow-presentation"></iframe>
+          <div class="ctrls">
+            <div class="btn js-toggle">Lecture</div>
+            <div class="btn js-mute">Son</div>
+            <div class="prog js-prog"><div class="bar"></div></div>
+            <div class="btn js-full">Plein écran</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
 
-        {/* Footer */}
-        <footer className="text-center py-8 text-gray-400 border-t border-slate-800 w-full mt-auto">
-          © 2025 Centre de Danse Delphine Letort · Réalisation{" "}
-          <span className="text-rosefluo">Spectra Media</span>
-        </footer>
-      </body>
-    </>
-  );
-}
+  <!-- API YouTube -->
+  <script src="https://www.youtube.com/iframe_api"></script>
+  <script>
+    const players = new Map();
+
+    function mountPlayer(container, vid){
+      const iframe = container.querySelector('iframe');
+      const origin = location.origin;
+      const params = new URLSearchParams({
+        enablejsapi:'1', playsinline:'1', modestbranding:'1', rel:'0', iv_load_policy:'3',
+        controls:'0', disablekb:'1', fs:'1', vq:'hd1080', origin
+      });
+      iframe.src = `https://www.youtube-nocookie.com/embed/${vid}?${params.toString()}`;
+      iframe.style.display = 'block';
+      container.querySelector('.poster')?.remove();
+      container.querySelector('.play')?.remove();
+
+      const player = new YT.Player(iframe, {
+        events: { onReady: e => e.target.playVideo() }
+      });
+      players.set(container, player);
+
+      // Custom controls
+      const tgl = container.querySelector('.js-toggle');
+      const mut = container.querySelector('.js-mute');
+      const ful = container.querySelector('.js-full');
+      const prg = container.querySelector('.js-prog');
+      const bar = container.querySelector('.bar');
+
+      function tick(){
+        if (player && player.getDuration){
+          const d = player.getDuration() || 0;
+          const t = player.getCurrentTime ? player.getCurrentTime() : 0;
+          bar.style.width = d ? ((t/d)*100).toFixed(2)+'%' : '0%';
+        }
+        requestAnimationFrame(tick);
+      }
+      requestAnimationFrame(tick);
+
+      tgl.onclick = () => {
+        const st = player.getPlayerState();
+        if (st === YT.PlayerState.PLAYING){ player.pauseVideo(); tgl.textContent='Lecture'; }
+        else { player.playVideo(); tgl.textContent='Pause'; }
+      };
+      mut.onclick = () => {
+        if (player.isMuted()){ player.unMute(); mut.textContent='Son'; }
+        else { player.mute(); mut.textContent='Muet'; }
+      };
+      ful.onclick = () => { iframe.requestFullscreen && iframe.requestFullscreen(); };
+      prg.onclick = (e) => {
+        const r = prg.getBoundingClientRect();
+        const p = Math.min(1, Math.max(0, (e.clientX - r.left) / r.width));
+        const d = player.getDuration();
+        if (d) player.seekTo(d*p, true);
+      };
+    }
+
+    window.onYouTubeIframeAPIReady = () => {
+      document.querySelectorAll('.player').forEach(box => {
+        const id = box.getAttribute('data-yt');
+        box.querySelector('.play').addEventListener('click', () => mountPlayer(box, id), { once:true });
+      });
+    };
+
+    // blocage clic droit global (limite l'accès contextuel)
+    document.addEventListener('contextmenu', e => e.preventDefault());
+  </script>
+</body>
+</html>
