@@ -7,18 +7,12 @@ export default function Home() {
         <title>DanseFlix — La Belle au Bois Dormant</title>
         <meta
           name="description"
-          content="DanseFlix — Les captations HD du spectacle 'La Belle au bois dormant' du Centre de Danse Delphine Letort. Découvrez les représentations du samedi et du dimanche en haute définition."
+          content="DanseFlix — Les captations HD du spectacle 'La Belle au bois dormant' du Centre de Danse Delphine Letort."
         />
         <meta property="og:title" content="DanseFlix — La Belle au Bois Dormant" />
-        <meta
-          property="og:description"
-          content="Captations HD de l'École de danse Delphine Letort — Samedi et Dimanche."
-        />
+        <meta property="og:description" content="Captations HD de l'École de danse Delphine Letort — Samedi et Dimanche." />
         <meta property="og:type" content="website" />
-        <link
-          rel="icon"
-          href="https://i.postimg.cc/jjTjB78d/logo-delph-trans-copie.jpg"
-        />
+        <link rel="icon" href="https://i.postimg.cc/jjTjB78d/logo-delph-trans-copie.jpg" />
         <script src="https://cdn.tailwindcss.com"></script>
         <script
           dangerouslySetInnerHTML={{
@@ -47,25 +41,16 @@ export default function Home() {
 
       <body className="bg-gradient-to-b from-midnight via-slate-900 to-black text-white font-sans min-h-screen flex flex-col items-center">
         {/* Header */}
-        <header className="text-center py-12 w-full">
+        <header className="text-center py-12">
           <img
             src="https://i.postimg.cc/jjTjB78d/logo-delph-trans-copie.jpg"
             alt="Logo Centre de Danse Delphine Letort"
-            className="mx-auto w-40 sm:w-52 drop-shadow-xl"
+            className="mx-auto w-56 drop-shadow-2xl"
           />
-          {/* LOGO TEXTE TRÈS GRAND */}
-          <h1
-            className="font-extrabold mt-6 
-                       bg-gradient-to-r from-rosefluo via-violetsoft to-rosefluo 
-                       bg-clip-text text-transparent 
-                       tracking-wide animate-pulse
-                       text-[16vw] sm:text-[10vw] leading-none"
-          >
+          <h1 className="text-[12vw] sm:text-[8vw] font-extrabold mt-6 bg-gradient-to-r from-rosefluo via-violetsoft to-rosefluo bg-clip-text text-transparent tracking-wide animate-pulse">
             DanseFlix
           </h1>
-          <p className="mt-3 text-lg text-gray-300 italic">
-            La Belle au bois dormant — Spectacle 2025
-          </p>
+          <p className="mt-3 text-lg text-gray-300 italic">La Belle au bois dormant — Spectacle 2025</p>
         </header>
 
         {/* Affiche principale */}
@@ -83,29 +68,21 @@ export default function Home() {
           </figure>
         </section>
 
-        {/* Vidéos sans interface Archive */}
-        <main
-          id="contenu"
-          className="flex flex-col items-center w-full max-w-5xl gap-10 px-4 pb-20"
-        >
+        {/* Vidéos */}
+        <main id="contenu" className="flex flex-col items-center w-full max-w-5xl gap-10 px-4 pb-20">
           {/* Samedi */}
           <section className="w-full bg-gradient-to-r from-slate-800/70 to-slate-900/60 backdrop-blur-md rounded-2xl shadow-soft p-6 border border-slate-700/50">
             <h2 className="text-2xl font-semibold mb-4 text-center text-rosefluo">
-              Samedi après-midi — La Belle au bois dormant
+              Samedi — La Belle au bois dormant
             </h2>
             <div className="aspect-video rounded-xl overflow-hidden border border-slate-700">
-              <video
-                controls
-                preload="metadata"
-                className="w-full h-full rounded-xl"
-                poster="https://i.postimg.cc/vmXGjSxR/La-Belle-Affiche-copie.jpg"
-              >
-                <source
-                  src="https://archive.org/download/SAMSOOR/SAMSOOR.mp4"
-                  type="video/mp4"
-                />
-                Votre navigateur ne supporte pas la vidéo HTML5.
-              </video>
+              <iframe
+                src="https://www.youtube.com/embed/AI_UteIH42U?rel=0&vq=hd1080&modestbranding=1&controls=1"
+                title="DanseFlix Samedi"
+                className="w-full h-full"
+                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                allowFullScreen
+              />
             </div>
           </section>
 
@@ -115,21 +92,17 @@ export default function Home() {
               Dimanche — La Belle au bois dormant
             </h2>
             <div className="aspect-video rounded-xl overflow-hidden border border-slate-700">
-              <video
-                controls
-                preload="metadata"
-                className="w-full h-full rounded-xl"
-                poster="https://i.postimg.cc/vmXGjSxR/La-Belle-Affiche-copie.jpg"
-              >
-                <source
-                  src="https://archive.org/download/dim_20250908/dim_20250908.mp4"
-                  type="video/mp4"
-                />
-                Votre navigateur ne supporte pas la vidéo HTML5.
-              </video>
+              <iframe
+                src="https://www.youtube.com/embed/Ky6x74z20N8?rel=0&vq=hd1080&modestbranding=1&controls=1"
+                title="DanseFlix Dimanche"
+                className="w-full h-full"
+                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                allowFullScreen
+              />
             </div>
           </section>
 
+          {/* Bouton école */}
           <div className="text-center mt-10">
             <a
               href="https://www.dansedelphineletort.com/"
