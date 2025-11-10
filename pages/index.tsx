@@ -59,13 +59,6 @@ export default function Home() {
           </section>
 
           <section className="w-full bg-gradient-to-r from-slate-800/70 to-slate-900/60 backdrop-blur-md rounded-2xl shadow-soft p-6 border border-slate-700/50">
-            <h2 className="text-2xl font-semibold mb-4 text-center text-rosefluo">Samedi soir — La Belle au bois dormant</h2>
-            <div className="aspect-video rounded-xl overflow-hidden border border-slate-700">
-              <iframe src="https://archive.org/embed/SAMSOOR" title="Samedi Soir" className="w-full h-full" allowFullScreen></iframe>
-            </div>
-          </section>
-
-          <section className="w-full bg-gradient-to-r from-slate-800/70 to-slate-900/60 backdrop-blur-md rounded-2xl shadow-soft p-6 border border-slate-700/50">
             <h2 className="text-2xl font-semibold mb-4 text-center text-rosefluo">Dimanche — La Belle au bois dormant</h2>
             <div className="aspect-video rounded-xl overflow-hidden border border-slate-700">
               <iframe src="https://archive.org/embed/dim_20250908" title="Dimanche" className="w-full h-full" allowFullScreen></iframe>
