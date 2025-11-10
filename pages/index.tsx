@@ -7,48 +7,27 @@ export default function Home() {
         <title>DanseFlix — La Belle au Bois Dormant</title>
         <meta
           name="description"
-          content="DanseFlix — Les captations HD du spectacle 'La Belle au bois dormant' du Centre de Danse Delphine Letort. Découvrez les représentations du samedi et du dimanche en haute définition."
+          content="DanseFlix — Les captations HD du spectacle 'La Belle au bois dormant' du Centre de Danse Delphine Letort. Découvrez les représentations du samedi après-midi et du dimanche."
         />
-        <meta
-          property="og:title"
-          content="DanseFlix — La Belle au Bois Dormant"
-        />
-        <meta
-          property="og:description"
-          content="Captations HD de l'École de danse Delphine Letort — Samedi et Dimanche."
-        />
+        <meta property="og:title" content="DanseFlix — La Belle au Bois Dormant" />
+        <meta property="og:description" content="Captations HD — Samedi (après-midi) et Dimanche." />
         <meta property="og:type" content="website" />
-        <link
-          rel="icon"
-          href="https://i.postimg.cc/jjTjB78d/logo-delph-trans-copie.jpg"
-        />
+        <link rel="icon" href="https://i.postimg.cc/jjTjB78d/logo-delph-trans-copie.jpg" />
         <link rel="preconnect" href="https://archive.org" />
         <link rel="dns-prefetch" href="https://archive.org" />
-        <script
-          src="https://cdn.tailwindcss.com"
-          defer
-        ></script>
+        <script src="https://cdn.tailwindcss.com" defer></script>
         <script
           dangerouslySetInnerHTML={{
             __html: `
-          tailwind.config = {
-            theme: {
-              extend: {
-                colors: {
-                  rosefluo: '#ff6fb3',
-                  violetsoft: '#a78bfa',
-                  midnight: '#0f0a25',
-                },
-                fontFamily: {
-                  sans: ['Inter', 'system-ui', 'sans-serif']
-                },
-                boxShadow: {
-                  soft: '0 15px 40px rgba(0,0,0,0.3)'
+              tailwind.config = {
+                theme: {
+                  extend: {
+                    colors: { rosefluo:'#ff6fb3', violetsoft:'#a78bfa', midnight:'#0f0a25' },
+                    fontFamily: { sans:['Inter','system-ui','sans-serif'] },
+                    boxShadow: { soft:'0 15px 40px rgba(0,0,0,0.3)' }
+                  }
                 }
-              }
-            }
-          }
-        `,
+              }`,
           }}
         />
       </Head>
@@ -69,7 +48,7 @@ export default function Home() {
           </p>
         </header>
 
-        {/* Affiche principale */}
+        {/* Affiche */}
         <section className="w-full max-w-3xl px-4 mb-10">
           <figure className="rounded-2xl overflow-hidden shadow-[0_20px_55px_rgba(0,0,0,0.4)] border border-slate-800">
             <img
@@ -84,58 +63,50 @@ export default function Home() {
           </figure>
         </section>
 
-        {/* Vidéos */}
-        <main
-          id="contenu"
-          className="flex flex-col items-center w-full max-w-5xl gap-10 px-4 pb-20"
-        >
-          {/* Samedi après-midi */}
-          <section className="w-full bg-gradient-to-r from-slate-800/70 to-slate-900/60 backdrop-blur-md rounded-2xl shadow-soft p-6 border border-slate-700/50">
-            <h2 className="text-2xl font-semibold mb-4 text-center text-rosefluo">
+        {/* Liens vidéos — ouverture dans un nouvel onglet */}
+        <main id="contenu" className="flex flex-col items-center w-full max-w-2xl gap-6 px-4 pb-20">
+          <section className="w-full bg-gradient-to-r from-slate-800/70 to-slate-900/60 backdrop-blur-md rounded-2xl shadow-soft p-6 border border-slate-700/50 text-center">
+            <h2 className="text-2xl font-semibold mb-3 text-rosefluo">
               Samedi après-midi — La Belle au bois dormant
             </h2>
-            <div className="aspect-video rounded-xl overflow-hidden border border-slate-700">
-              <video
-                controls
-                preload="metadata"
-                className="w-full h-full rounded-xl"
-                poster="https://archive.org/services/img/ok-dljuin-2025-sam-15h-rush-serre.mov-sam-am-multicam-dim-16h-1"
-              >
-                <source
-                  src="https://archive.org/download/ok-dljuin-2025-sam-15h-rush-serre.mov-sam-am-multicam-dim-16h-1/ok-dljuin-2025-sam-15h-rush-serre.mov-sam-am-multicam-dim-16h-1.mp4#t=0.1"
-                  type="video/mp4"
-                />
-                Votre navigateur ne supporte pas la vidéo HTML5.
-              </video>
+            <p className="text-gray-300 mb-4">Ouverture dans un nouvel onglet pour une lecture plus fluide.</p>
+            <a
+              href="https://archive.org/download/ok-dljuin-2025-sam-15h-rush-serre.mov-sam-am-multicam-dim-16h-1/ok-dljuin-2025-sam-15h-rush-serre.mov-sam-am-multicam-dim-16h-1.mp4"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="inline-flex items-center justify-center gap-2 px-6 py-3 rounded-full bg-gradient-to-r from-violetsoft to-rosefluo text-black font-semibold hover:scale-105 transition-transform"
+            >
+              ▶ Ouvrir la vidéo Samedi après-midi
+            </a>
+            <div className="mt-3 text-xs text-gray-400">
+              Si le débit est faible, clic droit → “Enregistrer la vidéo sous…”
             </div>
           </section>
 
-          {/* Dimanche */}
-          <section className="w-full bg-gradient-to-r from-slate-800/70 to-slate-900/60 backdrop-blur-md rounded-2xl shadow-soft p-6 border border-slate-700/50">
-            <h2 className="text-2xl font-semibold mb-4 text-center text-rosefluo">
+          <section className="w-full bg-gradient-to-r from-slate-800/70 to-slate-900/60 backdrop-blur-md rounded-2xl shadow-soft p-6 border border-slate-700/50 text-center">
+            <h2 className="text-2xl font-semibold mb-3 text-rosefluo">
               Dimanche — La Belle au bois dormant
             </h2>
-            <div className="aspect-video rounded-xl overflow-hidden border border-slate-700">
-              <video
-                controls
-                preload="metadata"
-                className="w-full h-full rounded-xl"
-                poster="https://archive.org/services/img/dim_20250908"
-              >
-                <source
-                  src="https://archive.org/download/dim_20250908/dim_20250908.mp4#t=0.1"
-                  type="video/mp4"
-                />
-                Votre navigateur ne supporte pas la vidéo HTML5.
-              </video>
+            <p className="text-gray-300 mb-4">Ouverture dans un nouvel onglet pour une lecture plus fluide.</p>
+            <a
+              href="https://archive.org/download/dim_20250908/dim_20250908.mp4"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="inline-flex items-center justify-center gap-2 px-6 py-3 rounded-full bg-gradient-to-r from-violetsoft to-rosefluo text-black font-semibold hover:scale-105 transition-transform"
+            >
+              ▶ Ouvrir la vidéo Dimanche
+            </a>
+            <div className="mt-3 text-xs text-gray-400">
+              Si le débit est faible, clic droit → “Enregistrer la vidéo sous…”
             </div>
           </section>
 
           {/* Lien site */}
-          <div className="text-center mt-10">
+          <div className="text-center mt-6">
             <a
               href="https://www.dansedelphineletort.com/"
               target="_blank"
+              rel="noopener noreferrer"
               className="inline-block bg-gradient-to-r from-violetsoft to-rosefluo text-black font-semibold px-6 py-3 rounded-full shadow-lg hover:scale-105 transition-transform"
             >
               Visiter le site de l’école
