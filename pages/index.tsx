@@ -47,23 +47,25 @@ export default function Home() {
 
       <body className="bg-gradient-to-b from-midnight via-slate-900 to-black text-white font-sans min-h-screen flex flex-col items-center">
         {/* Header */}
-        <header className="w-full text-center py-12 relative overflow-hidden">
+        <header className="text-center py-12 w-full">
           <img
             src="https://i.postimg.cc/jjTjB78d/logo-delph-trans-copie.jpg"
             alt="Logo Centre de Danse Delphine Letort"
-            className="mx-auto w-32 sm:w-44 drop-shadow-xl z-10 relative"
+            className="mx-auto w-40 sm:w-52 drop-shadow-xl"
           />
+          {/* LOGO TEXTE TRÈS GRAND */}
           <h1
-            className="text-[12vw] sm:text-8xl font-extrabold mt-4 
+            className="font-extrabold mt-6 
                        bg-gradient-to-r from-rosefluo via-violetsoft to-rosefluo 
-                       bg-clip-text text-transparent tracking-wider animate-pulse w-full"
+                       bg-clip-text text-transparent 
+                       tracking-wide animate-pulse
+                       text-[16vw] sm:text-[10vw] leading-none"
           >
             DanseFlix
           </h1>
-          <p className="mt-3 text-lg text-gray-300 italic z-10 relative">
+          <p className="mt-3 text-lg text-gray-300 italic">
             La Belle au bois dormant — Spectacle 2025
           </p>
-          <div className="absolute inset-0 bg-gradient-to-b from-transparent to-midnight/40" />
         </header>
 
         {/* Affiche principale */}
@@ -81,36 +83,50 @@ export default function Home() {
           </figure>
         </section>
 
-        {/* Vidéos (embed propre sans barre Internet Archive) */}
+        {/* Vidéos sans interface Archive */}
         <main
           id="contenu"
           className="flex flex-col items-center w-full max-w-5xl gap-10 px-4 pb-20"
         >
+          {/* Samedi */}
           <section className="w-full bg-gradient-to-r from-slate-800/70 to-slate-900/60 backdrop-blur-md rounded-2xl shadow-soft p-6 border border-slate-700/50">
             <h2 className="text-2xl font-semibold mb-4 text-center text-rosefluo">
               Samedi après-midi — La Belle au bois dormant
             </h2>
             <div className="aspect-video rounded-xl overflow-hidden border border-slate-700">
-              <iframe
-                src="https://archive.org/embed/SAMSOOR"
-                title="Samedi Après-midi"
-                className="w-full h-full"
-                allowFullScreen
-              ></iframe>
+              <video
+                controls
+                preload="metadata"
+                className="w-full h-full rounded-xl"
+                poster="https://i.postimg.cc/vmXGjSxR/La-Belle-Affiche-copie.jpg"
+              >
+                <source
+                  src="https://archive.org/download/SAMSOOR/SAMSOOR.mp4"
+                  type="video/mp4"
+                />
+                Votre navigateur ne supporte pas la vidéo HTML5.
+              </video>
             </div>
           </section>
 
+          {/* Dimanche */}
           <section className="w-full bg-gradient-to-r from-slate-800/70 to-slate-900/60 backdrop-blur-md rounded-2xl shadow-soft p-6 border border-slate-700/50">
             <h2 className="text-2xl font-semibold mb-4 text-center text-rosefluo">
               Dimanche — La Belle au bois dormant
             </h2>
             <div className="aspect-video rounded-xl overflow-hidden border border-slate-700">
-              <iframe
-                src="https://archive.org/embed/dim_20250908"
-                title="Dimanche"
-                className="w-full h-full"
-                allowFullScreen
-              ></iframe>
+              <video
+                controls
+                preload="metadata"
+                className="w-full h-full rounded-xl"
+                poster="https://i.postimg.cc/vmXGjSxR/La-Belle-Affiche-copie.jpg"
+              >
+                <source
+                  src="https://archive.org/download/dim_20250908/dim_20250908.mp4"
+                  type="video/mp4"
+                />
+                Votre navigateur ne supporte pas la vidéo HTML5.
+              </video>
             </div>
           </section>
 
