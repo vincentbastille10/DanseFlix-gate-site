@@ -23,42 +23,47 @@ export default function Home() {
         <script
           dangerouslySetInnerHTML={{
             __html: `
-          tailwind.config = {
-            theme: {
-              extend: {
-                colors: {
-                  rosefluo: '#ff6fb3',
-                  violetsoft: '#a78bfa',
-                  midnight: '#0f0a25',
-                },
-                fontFamily: {
-                  sans: ['Inter', 'system-ui', 'sans-serif']
-                },
-                boxShadow: {
-                  soft: '0 15px 40px rgba(0,0,0,0.3)'
+              tailwind.config = {
+                theme: {
+                  extend: {
+                    colors: {
+                      rosefluo: '#ff6fb3',
+                      violetsoft: '#a78bfa',
+                      midnight: '#0f0a25',
+                    },
+                    fontFamily: {
+                      sans: ['Inter', 'system-ui', 'sans-serif']
+                    },
+                    boxShadow: {
+                      soft: '0 15px 40px rgba(0,0,0,0.3)'
+                    }
+                  }
                 }
               }
-            }
-          }
-        `,
+            `,
           }}
         />
       </Head>
 
       <body className="bg-gradient-to-b from-midnight via-slate-900 to-black text-white font-sans min-h-screen flex flex-col items-center">
         {/* Header */}
-        <header className="text-center py-12">
+        <header className="w-full text-center py-12 relative overflow-hidden">
           <img
             src="https://i.postimg.cc/jjTjB78d/logo-delph-trans-copie.jpg"
             alt="Logo Centre de Danse Delphine Letort"
-            className="mx-auto w-44 drop-shadow-xl"
+            className="mx-auto w-32 sm:w-44 drop-shadow-xl z-10 relative"
           />
-          <h1 className="text-6xl font-extrabold mt-6 bg-gradient-to-r from-rosefluo via-violetsoft to-rosefluo bg-clip-text text-transparent tracking-wide animate-pulse">
+          <h1
+            className="text-[12vw] sm:text-8xl font-extrabold mt-4 
+                       bg-gradient-to-r from-rosefluo via-violetsoft to-rosefluo 
+                       bg-clip-text text-transparent tracking-wider animate-pulse w-full"
+          >
             DanseFlix
           </h1>
-          <p className="mt-3 text-lg text-gray-300 italic">
+          <p className="mt-3 text-lg text-gray-300 italic z-10 relative">
             La Belle au bois dormant — Spectacle 2025
           </p>
+          <div className="absolute inset-0 bg-gradient-to-b from-transparent to-midnight/40" />
         </header>
 
         {/* Affiche principale */}
@@ -76,19 +81,18 @@ export default function Home() {
           </figure>
         </section>
 
-        {/* Vidéos */}
+        {/* Vidéos (embed propre sans barre Internet Archive) */}
         <main
           id="contenu"
           className="flex flex-col items-center w-full max-w-5xl gap-10 px-4 pb-20"
         >
-          {/* Samedi après-midi — lien “details” */}
           <section className="w-full bg-gradient-to-r from-slate-800/70 to-slate-900/60 backdrop-blur-md rounded-2xl shadow-soft p-6 border border-slate-700/50">
             <h2 className="text-2xl font-semibold mb-4 text-center text-rosefluo">
               Samedi après-midi — La Belle au bois dormant
             </h2>
             <div className="aspect-video rounded-xl overflow-hidden border border-slate-700">
               <iframe
-                src="https://archive.org/details/SAMSOOR"
+                src="https://archive.org/embed/SAMSOOR"
                 title="Samedi Après-midi"
                 className="w-full h-full"
                 allowFullScreen
@@ -96,14 +100,13 @@ export default function Home() {
             </div>
           </section>
 
-          {/* Dimanche — lien “details” */}
           <section className="w-full bg-gradient-to-r from-slate-800/70 to-slate-900/60 backdrop-blur-md rounded-2xl shadow-soft p-6 border border-slate-700/50">
             <h2 className="text-2xl font-semibold mb-4 text-center text-rosefluo">
               Dimanche — La Belle au bois dormant
             </h2>
             <div className="aspect-video rounded-xl overflow-hidden border border-slate-700">
               <iframe
-                src="https://archive.org/details/dim_20250908"
+                src="https://archive.org/embed/dim_20250908"
                 title="Dimanche"
                 className="w-full h-full"
                 allowFullScreen
