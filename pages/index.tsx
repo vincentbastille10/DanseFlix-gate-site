@@ -1,24 +1,23 @@
 import Head from "next/head";
 import Script from "next/script";
-import { useEffect, useState } from "react";
+import { FormEvent, useEffect, useState } from "react";
 
 export default function Home() {
-  const [ready, setReady] = useState(false);
+  const [email, setEmail] = useState("");
+  const [checking, setChecking] = useState(false);
+  const [error, setError] = useState<string | null>(null);
+  const [unlocked, setUnlocked] = useState(false);
 
-  // Protection : si pas de flag, renvoie vers /login
+  // Déjà validé sur ce navigateur ?
   useEffect(() => {
     if (typeof window === "undefined") return;
     const ok = window.localStorage.getItem("danseflix_access_ok");
-    if (ok !== "1") {
-      window.location.href = "/login";
-    } else {
-      setReady(true);
-    }
+    if (ok === "1") setUnlocked(true);
   }, []);
 
   // Script vidéo YouTube + blocage clic droit
   useEffect(() => {
-    if (!ready) return;
+    if (!unlocked) return; // on ne monte les players qu’après login
 
     const players = new Map<Element, any>();
 
@@ -33,15 +32,16 @@ export default function Home() {
         modestbranding: "1",
         rel: "0",
         iv_load_policy: "3",
-        controls: "0",
+        controls: "0", // aucun contrôle natif -> pas de "copier le lien"
         disablekb: "1",
         fs: "1",
-        vq: "highres",
+        vq: "highres", // qualité max
         origin,
       });
 
       iframe.src = `https://www.youtube-nocookie.com/embed/${vid}?${params.toString()}`;
       iframe.style.display = "block";
+      container.classList.add("yt-active");
 
       const poster = container.querySelector(".poster");
       const playBtn = container.querySelector(".play");
@@ -74,7 +74,9 @@ export default function Home() {
         if (player && player.getDuration) {
           const d = player.getDuration() || 0;
           const t = player.getCurrentTime ? player.getCurrentTime() : 0;
-          if (bar) bar.style.width = d ? ((t / d) * 100).toFixed(2) + "%" : "0%";
+          if (bar) {
+            bar.style.width = d ? ((t / d) * 100).toFixed(2) + "%" : "0%";
+          }
         }
         requestAnimationFrame(tick);
       }
@@ -92,6 +94,7 @@ export default function Home() {
           }
         };
       }
+
       if (mut) {
         mut.onclick = () => {
           if (player.isMuted()) {
@@ -103,11 +106,13 @@ export default function Home() {
           }
         };
       }
+
       if (ful) {
         ful.onclick = () => {
           if (iframe.requestFullscreen) iframe.requestFullscreen();
         };
       }
+
       if (prg) {
         prg.onclick = (e: MouseEvent) => {
           const r = prg.getBoundingClientRect();
@@ -118,7 +123,7 @@ export default function Home() {
       }
     }
 
-    (window as any).onYouTubeIframeAPIReady = () => {
+    function setupPlayers() {
       document.querySelectorAll<HTMLElement>(".player").forEach((box) => {
         const id = box.getAttribute("data-yt");
         const playBtn = box.querySelector(".play");
@@ -130,18 +135,71 @@ export default function Home() {
           );
         }
       });
+    }
+
+    // API YouTube prête
+    (window as any).onYouTubeIframeAPIReady = () => {
+      setupPlayers();
     };
 
+    // Si l'API est déjà chargée (cas où le script a fini avant notre useEffect)
+    if ((window as any).YT && (window as any).YT.Player) {
+      setupPlayers();
+    }
+
+    // Blocage clic droit global
     const blockCtx = (e: MouseEvent) => e.preventDefault();
     document.addEventListener("contextmenu", blockCtx);
     return () => {
       document.removeEventListener("contextmenu", blockCtx);
     };
-  }, [ready]);
+  }, [unlocked]);
 
-  if (!ready) {
-    // Petit écran d’attente le temps de vérifier le localStorage
-    return null;
+  // Vérification de l’email dans allowlist.json (dans /public)
+  async function handleSubmit(e: FormEvent) {
+    e.preventDefault();
+    setError(null);
+    const clean = email.trim().toLowerCase();
+    if (!clean) {
+      setError("Merci de saisir l’email utilisé lors de l’achat.");
+      return;
+    }
+
+    setChecking(true);
+    try {
+      const res = await fetch("/allowlist.json", { cache: "no-store" });
+      if (!res.ok) throw new Error("Allowlist introuvable");
+      const data = await res.json();
+      let list: string[] = [];
+
+      if (Array.isArray(data)) {
+        list = data;
+      } else if (Array.isArray((data as any).emails)) {
+        list = (data as any).emails;
+      }
+
+      const found = list.some(
+        (entry) => String(entry).trim().toLowerCase() === clean
+      );
+
+      if (!found) {
+        setError(
+          "Cette adresse n’est pas reconnue. Vérifiez l’email utilisé lors du paiement ou contactez l’école."
+        );
+      } else {
+        if (typeof window !== "undefined") {
+          window.localStorage.setItem("danseflix_access_ok", "1");
+          window.localStorage.setItem("danseflix_email", clean);
+        }
+        setUnlocked(true);
+      }
+    } catch (err) {
+      setError(
+        "Erreur lors de la vérification. Réessayez dans un instant ou contactez l’organisateur."
+      );
+    } finally {
+      setChecking(false);
+    }
   }
 
   return (
@@ -153,23 +211,54 @@ export default function Home() {
           content="width=device-width,initial-scale=1"
         />
         <meta charSet="utf-8" />
+        <meta
+          name="description"
+          content="Portail privé DanseFlix — captation HD/4K de La Belle au Bois Dormant."
+        />
+        <link rel="preconnect" href="https://fonts.googleapis.com" />
+        <link
+          rel="preconnect"
+          href="https://fonts.gstatic.com"
+          crossOrigin="anonymous"
+        />
+        <link
+          href="https://fonts.googleapis.com/css2?family=Inter:wght@400;700;900&display=swap"
+          rel="stylesheet"
+        />
       </Head>
 
       <main className="danseflix-body">
         <div className="df-backdrop">
           <div className="df-overlay-gradient" />
+
           <div className="wrap">
+            {/* Logo + sous-titres */}
             <header className="df-header">
-              <div className="df-logo-main">DANSEFLIX</div>
+              <div className="df-logo-main">DanseFlix</div>
               <div className="df-subtitle">
                 la plateforme de l&apos;école de danse Delphine Letort
               </div>
               <div className="df-subsubtitle">
-                Spectacle enregistré à la Salle des Concerts du Mans — juin 2025
+                spectacle enregistré à la salle des concerts du Mans – Juin 2025
               </div>
             </header>
 
-            <section className="df-content">
+            {/* Contenu vidéos flouté tant que non connecté */}
+            <div
+              className={
+                unlocked
+                  ? "df-content df-content-on"
+                  : "df-content df-content-blur"
+              }
+            >
+              <section className="df-intro">
+                <p>
+                  Accès réservé aux familles et élèves. Vous retrouvez ici la
+                  captation de <strong>La Belle au Bois Dormant</strong> pour les
+                  représentations du samedi et du dimanche.
+                </p>
+              </section>
+
               {/* Samedi */}
               <section className="df-video-block">
                 <h2>Samedi — La Belle au bois dormant</h2>
@@ -235,21 +324,53 @@ export default function Home() {
               </section>
 
               <p className="df-note-footer">
-                Merci de ne pas partager ce lien publiquement. Cette page est réservée
-                aux familles et danseurs ayant acquis la captation.
+                Merci de ne pas partager ce lien publiquement. Cette page est
+                réservée aux familles et danseurs ayant acquis la captation.
               </p>
-            </section>
+            </div>
           </div>
+
+          {/* Overlay login bleu */}
+          {!unlocked && (
+            <div className="df-login-overlay">
+              <div className="df-login-card">
+                <h2>Accès privé DanseFlix</h2>
+                <p>
+                  Pour accéder aux vidéos, merci d&apos;entrer{" "}
+                  <strong>l’email utilisé lors de l’achat</strong>.
+                </p>
+                <form onSubmit={handleSubmit} className="df-login-form">
+                  <label htmlFor="email">Email utilisé lors du paiement</label>
+                  <input
+                    id="email"
+                    type="email"
+                    required
+                    value={email}
+                    onChange={(e) => setEmail(e.target.value)}
+                    placeholder="prenom.nom@email.com"
+                  />
+                  {error && <div className="df-error">{error}</div>}
+                  <button type="submit" disabled={checking}>
+                    {checking ? "Vérification en cours…" : "Accéder aux vidéos"}
+                  </button>
+                </form>
+                <p className="df-login-help">
+                  Problème d&apos;accès ? Contactez l&apos;école ou l&apos;organisateur
+                  en indiquant votre email.
+                </p>
+              </div>
+            </div>
+          )}
         </div>
 
-        {/* Styles globaux (dégradés + layout) */}
+        {/* Styles globaux */}
         <style jsx global>{`
           :root {
-            --bg: #050614;
+            --bg: #050518;
             --pink: #ff6fb3;
             --violet: #a78bfa;
             --cyan: #00d1ff;
-            --glass: rgba(255, 255, 255, 0.06);
+            --glass: rgba(15, 23, 42, 0.9);
           }
           * {
             box-sizing: border-box;
@@ -264,41 +385,47 @@ export default function Home() {
             color: #fff;
             background: var(--bg);
           }
+
           .danseflix-body {
             min-height: 100vh;
           }
+
           .df-backdrop {
             position: relative;
             min-height: 100vh;
             padding: 28px;
+            display: flex;
+            justify-content: center;
             background:
               radial-gradient(
                   1200px 800px at 8% 10%,
-                  rgba(255, 111, 179, 0.18),
-                  transparent 50%
-                ),
-              radial-gradient(
-                  1100px 700px at 92% 20%,
-                  rgba(167, 139, 250, 0.16),
+                  rgba(255, 111, 179, 0.22),
                   transparent 55%
                 ),
               radial-gradient(
-                  1000px 700px at 50% 95%,
-                  rgba(0, 209, 255, 0.12),
+                  1100px 700px at 92% 20%,
+                  rgba(167, 139, 250, 0.18),
                   transparent 60%
                 ),
-              url("/belle-poster.jpg") center/cover no-repeat fixed;
+              radial-gradient(
+                  1000px 700px at 50% 95%,
+                  rgba(0, 209, 255, 0.18),
+                  transparent 65%
+                ),
+              url("/belle-poster.jpg") center/cover no-repeat;
           }
+
           .df-overlay-gradient {
             position: absolute;
             inset: 0;
             background: linear-gradient(
               180deg,
-              rgba(5, 5, 20, 0.92),
-              rgba(5, 5, 20, 0.96)
+              rgba(5, 5, 20, 0.9),
+              rgba(5, 5, 20, 0.98)
             );
-            backdrop-filter: blur(4px);
+            pointer-events: none;
           }
+
           .wrap {
             position: relative;
             z-index: 1;
@@ -306,47 +433,68 @@ export default function Home() {
             margin: 0 auto;
             width: 100%;
           }
+
           .df-header {
-            margin-bottom: 18px;
+            margin-bottom: 24px;
           }
           .df-logo-main {
-            margin: 0;
+            margin: 0 0 6px;
             font-size: clamp(42px, 8vw, 96px);
-            letter-spacing: 0.18em;
+            letter-spacing: 0.16em;
             text-transform: uppercase;
             font-weight: 900;
             color: #ffffff;
             text-shadow: 0 18px 50px rgba(0, 0, 0, 0.9);
           }
           .df-subtitle {
-            margin-top: 4px;
-            font-size: clamp(16px, 2.3vw, 22px);
+            font-size: clamp(16px, 2.5vw, 22px);
             font-weight: 600;
             color: rgba(241, 245, 249, 0.96);
+            text-shadow: 0 12px 40px rgba(0, 0, 0, 0.9);
           }
           .df-subsubtitle {
-            margin-top: 2px;
-            font-size: 13px;
-            opacity: 0.9;
-            color: rgba(209, 213, 219, 0.96);
+            font-size: 14px;
+            margin-top: 4px;
+            color: rgba(209, 213, 219, 0.9);
+            text-shadow: 0 10px 30px rgba(0, 0, 0, 0.8);
           }
+
           .df-content {
-            padding: 22px 20px 26px;
+            margin-top: 20px;
+            padding: 24px 20px 30px;
             border-radius: 22px;
             background: radial-gradient(
                 1200px 800px at 0% 0%,
-                rgba(148, 163, 184, 0.16),
+                rgba(148, 163, 184, 0.18),
                 transparent 60%
               ),
               radial-gradient(
                 1200px 800px at 100% 0%,
-                rgba(59, 130, 246, 0.18),
+                rgba(59, 130, 246, 0.2),
                 transparent 60%
               ),
-              rgba(15, 23, 42, 0.97);
+              rgba(15, 23, 42, 0.96);
             border: 1px solid rgba(148, 163, 184, 0.7);
             box-shadow: 0 26px 70px rgba(15, 23, 42, 0.95);
           }
+          .df-content-blur {
+            filter: blur(4px);
+            pointer-events: none;
+          }
+          .df-content-on {
+            filter: none;
+          }
+
+          .df-intro {
+            font-size: 15px;
+            line-height: 1.6;
+            margin-bottom: 22px;
+            color: rgba(226, 232, 240, 0.95);
+          }
+          .df-intro p {
+            margin: 0 0 10px;
+          }
+
           .df-video-block {
             margin-bottom: 26px;
           }
@@ -355,6 +503,7 @@ export default function Home() {
             font-size: 18px;
             font-weight: 700;
           }
+
           .player {
             position: relative;
             width: 100%;
@@ -364,6 +513,7 @@ export default function Home() {
             overflow: hidden;
             border: 1px solid rgba(255, 255, 255, 0.32);
           }
+
           .poster {
             position: absolute;
             inset: 0;
@@ -380,6 +530,7 @@ export default function Home() {
               rgba(0, 0, 0, 0.4)
             );
           }
+
           .play {
             position: absolute;
             left: 50%;
@@ -400,6 +551,7 @@ export default function Home() {
             height: 40px;
             fill: #000;
           }
+
           iframe {
             position: absolute;
             inset: 0;
@@ -408,6 +560,15 @@ export default function Home() {
             border: 0;
             display: none;
           }
+
+          /* Empêche YouTube d'intercepter les clics tant qu'on n'a pas monté notre player */
+          .player iframe {
+            pointer-events: none !important;
+          }
+          .player.yt-active iframe {
+            pointer-events: auto !important;
+          }
+
           .ctrls {
             position: absolute;
             left: 12px;
@@ -422,6 +583,7 @@ export default function Home() {
           .player:hover .ctrls {
             opacity: 1;
           }
+
           .btn {
             background: rgba(0, 0, 0, 0.55);
             border: 1px solid rgba(255, 255, 255, 0.18);
@@ -431,6 +593,7 @@ export default function Home() {
             cursor: pointer;
             user-select: none;
           }
+
           .prog {
             flex: 1;
             height: 6px;
@@ -448,11 +611,111 @@ export default function Home() {
             background: linear-gradient(90deg, var(--violet), var(--pink));
             border-radius: 9999px;
           }
+
           .df-note-footer {
+            margin-top: 10px;
+            font-size: 12px;
+            opacity: 0.8;
+          }
+
+          /* Overlay login */
+          .df-login-overlay {
+            position: fixed;
+            inset: 0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 16px;
+            z-index: 10;
+            backdrop-filter: blur(6px);
+          }
+          .df-login-card {
+            width: 100%;
+            max-width: 420px;
+            background: radial-gradient(
+                900px 700px at 0% 0%,
+                rgba(59, 130, 246, 0.4),
+                transparent 60%
+              ),
+              radial-gradient(
+                900px 700px at 100% 0%,
+                rgba(14, 165, 233, 0.5),
+                transparent 60%
+              ),
+              #0f172a;
+            border-radius: 22px;
+            padding: 24px 20px 20px;
+            border: 1px solid rgba(191, 219, 254, 0.85);
+            box-shadow: 0 26px 60px rgba(15, 23, 42, 0.95);
+            color: #e5f2ff;
+          }
+          .df-login-card h2 {
+            margin: 0 0 8px;
+            font-size: 20px;
+            font-weight: 800;
+          }
+          .df-login-card p {
+            margin: 0 0 12px;
+            font-size: 14px;
+            line-height: 1.5;
+          }
+          .df-login-form {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
             margin-top: 4px;
+          }
+          .df-login-form label {
+            font-size: 13px;
+            opacity: 0.9;
+          }
+          .df-login-form input {
+            padding: 10px 12px;
+            border-radius: 10px;
+            border: 1px solid rgba(191, 219, 254, 0.9);
+            background: rgba(15, 23, 42, 0.96);
+            color: #e5f2ff;
+            font-size: 14px;
+            outline: none;
+          }
+          .df-login-form input:focus {
+            box-shadow: 0 0 0 2px rgba(59, 130, 246, 0.8);
+          }
+          .df-login-form button {
+            margin-top: 4px;
+            padding: 10px 14px;
+            border-radius: 999px;
+            border: none;
+            cursor: pointer;
+            font-weight: 600;
+            font-size: 14px;
+            color: #0b1020;
+            background: linear-gradient(
+              135deg,
+              #38bdf8,
+              #4f46e5,
+              #ec4899
+            );
+            box-shadow: 0 18px 50px rgba(15, 23, 42, 0.95);
+          }
+          .df-login-form button:disabled {
+            opacity: 0.8;
+            cursor: progress;
+          }
+          .df-error {
+            font-size: 12px;
+            color: #fecaca;
+            background: rgba(127, 29, 29, 0.3);
+            border: 1px solid rgba(254, 202, 202, 0.8);
+            border-radius: 8px;
+            padding: 8px 9px;
+          }
+          .df-login-help {
+            margin-top: 8px;
             font-size: 12px;
             opacity: 0.85;
           }
+
           @media (max-width: 768px) {
             .df-backdrop {
               padding: 18px;
@@ -468,6 +731,7 @@ export default function Home() {
         `}</style>
       </main>
 
+      {/* Script YouTube API */}
       <Script
         src="https://www.youtube.com/iframe_api"
         strategy="afterInteractive"
