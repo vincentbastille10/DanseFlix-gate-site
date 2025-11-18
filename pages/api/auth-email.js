@@ -1,24 +1,22 @@
+// pages/api/auth-email.js
 import allowlist from "../../lib/allowlist.json";
 
 export default function handler(req, res) {
-  if (req.method !== "POST") return res.status(405).end();
+  const email =
+    (req.method === "POST" ? req.body?.email : req.query?.email) || "";
+  const clean = String(email).trim().toLowerCase();
 
-  const { email } = req.body || {};
-  if (!email) return res.status(400).json({ ok: false, error: "email_required" });
+  let list = [];
 
-  const found = allowlist.some(
-    (addr) => addr.trim().toLowerCase() === email.trim().toLowerCase()
-  );
-
-  if (!found) {
-    return res.status(401).json({ ok: false, error: "not_allowed" });
+  if (Array.isArray(allowlist)) {
+    list = allowlist;
+  } else if (Array.isArray(allowlist.emails)) {
+    list = allowlist.emails;
   }
 
-  // ✅ Si trouvé : cookie valide 30 jours
-  res.setHeader(
-    "Set-Cookie",
-    `dfx=${email.trim().toLowerCase()}; Path=/; HttpOnly; Secure; SameSite=Lax; Max-Age=2592000`
+  const found = list.some(
+    (entry) => String(entry).trim().toLowerCase() === clean
   );
 
-  return res.status(200).json({ ok: true });
+  res.status(200).json({ ok: found });
 }
