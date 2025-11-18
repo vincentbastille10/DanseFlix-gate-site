@@ -22,7 +22,9 @@ export default function Home() {
     const players = new Map<Element, any>();
 
     function mountPlayer(container: Element, vid: string) {
-      const iframe = container.querySelector("iframe") as HTMLIFrameElement | null;
+      const iframe = container.querySelector(
+        "iframe"
+      ) as HTMLIFrameElement | null;
       if (!iframe) return;
 
       const origin = window.location.origin;
@@ -55,7 +57,7 @@ export default function Home() {
         events: {
           onReady: (e: any) => {
             try {
-              // on force la qualité max dispo (4K quand possible)
+              // on force la meilleure qualité dispo
               e.target.setPlaybackQuality("highres");
             } catch {}
             e.target.playVideo();
@@ -130,14 +132,17 @@ export default function Home() {
         const id = box.getAttribute("data-yt");
         const playBtn = box.querySelector(".play");
         if (id && playBtn) {
-          playBtn.addEventListener(
-            "click",
-            () => mountPlayer(box, id),
-            { once: true }
-          );
+          playBtn.addEventListener("click", () => mountPlayer(box, id), {
+            once: true,
+          });
         }
       });
     };
+
+    // Si l’API est déjà chargée avant qu’on définisse la callback
+    if ((window as any).YT && (window as any).YT.Player) {
+      (window as any).onYouTubeIframeAPIReady();
+    }
 
     // Blocage clic droit global
     const blockCtx = (e: MouseEvent) => e.preventDefault();
@@ -199,10 +204,7 @@ export default function Home() {
     <>
       <Head>
         <title>DanseFlix — La Belle au Bois Dormant</title>
-        <meta
-          name="viewport"
-          content="width=device-width,initial-scale=1"
-        />
+        <meta name="viewport" content="width=device-width,initial-scale=1" />
         <meta charSet="utf-8" />
         <meta
           name="description"
@@ -225,29 +227,27 @@ export default function Home() {
           <div className="df-overlay-gradient" />
 
           <div className="wrap">
-            {/* Logo blanc + sous-titre */}
+            {/* Logo blanc + sous-titres */}
             <header className="df-header">
               <div className="df-logo-main">DanseFlix</div>
+              <div className="df-subline">
+                la plateforme de l&apos;école de danse Delphine Letort
+              </div>
               <div className="df-subtitle">La Belle au Bois Dormant</div>
             </header>
 
             {/* Contenu vidéos flouté tant que non connecté */}
             <div
               className={
-                unlocked ? "df-content df-content-on" : "df-content df-content-blur"
+                unlocked
+                  ? "df-content df-content-on"
+                  : "df-content df-content-blur"
               }
             >
               <section className="df-intro">
                 <p>
                   Accès réservé aux familles et élèves. Vous retrouvez ici la
                   captation de <strong>La Belle au Bois Dormant</strong>.
-                </p>
-                <p>
-                  Les vidéos sont disponibles en{" "}
-                  <strong>haute définition (jusqu&apos;en 4K selon votre appareil)</strong>.
-                  Pour être sûr d&apos;avoir la meilleure qualité, ouvrez les
-                  paramètres YouTube (roue dentée) et choisissez la définition la plus
-                  élevée.
                 </p>
               </section>
 
@@ -316,8 +316,8 @@ export default function Home() {
               </section>
 
               <p className="df-note-footer">
-                Merci de ne pas partager ce lien publiquement. Cette page est réservée
-                aux familles et danseurs ayant acquis la captation.
+                Merci de ne pas partager ce lien publiquement. Cette page est
+                réservée aux familles et danseurs ayant acquis la captation.
               </p>
             </div>
           </div>
@@ -347,8 +347,8 @@ export default function Home() {
                   </button>
                 </form>
                 <p className="df-login-help">
-                  Problème d&apos;accès ? Contactez l&apos;école ou l&apos;organisateur
-                  en indiquant votre email.
+                  Problème d&apos;accès ? Contactez l&apos;école ou
+                  l&apos;organisateur en indiquant votre email.
                 </p>
               </div>
             </div>
@@ -437,6 +437,14 @@ export default function Home() {
             font-weight: 900;
             color: #ffffff;
             text-shadow: 0 18px 50px rgba(0, 0, 0, 0.9);
+          }
+          .df-subline {
+            font-size: 14px;
+            font-weight: 500;
+            text-transform: uppercase;
+            letter-spacing: 0.12em;
+            color: rgba(241, 245, 249, 0.85);
+            margin-bottom: 4px;
           }
           .df-subtitle {
             font-size: clamp(18px, 3vw, 28px);
