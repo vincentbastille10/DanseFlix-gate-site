@@ -37,8 +37,7 @@ export default function Home() {
         controls: "0",
         disablekb: "1",
         fs: "1",
-        // qualité maximale suggérée
-        vq: "highres",
+        vq: "highres", // qualité max suggérée
         origin,
       });
 
@@ -57,7 +56,6 @@ export default function Home() {
         events: {
           onReady: (e: any) => {
             try {
-              // on force la meilleure qualité dispo
               e.target.setPlaybackQuality("highres");
             } catch {}
             e.target.playVideo();
@@ -67,11 +65,21 @@ export default function Home() {
 
       players.set(container, player);
 
-      const tgl = container.querySelector(".js-toggle") as HTMLDivElement | null;
-      const mut = container.querySelector(".js-mute") as HTMLDivElement | null;
-      const ful = container.querySelector(".js-full") as HTMLDivElement | null;
-      const prg = container.querySelector(".js-prog") as HTMLDivElement | null;
-      const bar = container.querySelector(".bar") as HTMLDivElement | null;
+      const tgl = container.querySelector(
+        ".js-toggle"
+      ) as HTMLDivElement | null;
+      const mut = container.querySelector(
+        ".js-mute"
+      ) as HTMLDivElement | null;
+      const ful = container.querySelector(
+        ".js-full"
+      ) as HTMLDivElement | null;
+      const prg = container.querySelector(
+        ".js-prog"
+      ) as HTMLDivElement | null;
+      const bar = container.querySelector(
+        ".bar"
+      ) as HTMLDivElement | null;
 
       function tick() {
         if (player && player.getDuration) {
@@ -119,7 +127,10 @@ export default function Home() {
       if (prg) {
         prg.onclick = (e: MouseEvent) => {
           const r = prg.getBoundingClientRect();
-          const p = Math.min(1, Math.max(0, (e.clientX - r.left) / r.width));
+          const p = Math.min(
+            1,
+            Math.max(0, (e.clientX - r.left) / r.width)
+          );
           const d = player.getDuration();
           if (d) player.seekTo(d * p, true);
         };
@@ -132,17 +143,14 @@ export default function Home() {
         const id = box.getAttribute("data-yt");
         const playBtn = box.querySelector(".play");
         if (id && playBtn) {
-          playBtn.addEventListener("click", () => mountPlayer(box, id), {
-            once: true,
-          });
+          playBtn.addEventListener(
+            "click",
+            () => mountPlayer(box, id),
+            { once: true }
+          );
         }
       });
     };
-
-    // Si l’API est déjà chargée avant qu’on définisse la callback
-    if ((window as any).YT && (window as any).YT.Player) {
-      (window as any).onYouTubeIframeAPIReady();
-    }
 
     // Blocage clic droit global
     const blockCtx = (e: MouseEvent) => e.preventDefault();
@@ -152,7 +160,7 @@ export default function Home() {
     };
   }, [unlocked]);
 
-  // Vérification de l’email dans allowlist.json
+  // Vérification de l’email via l’API /api/auth-email
   async function handleSubmit(e: FormEvent) {
     e.preventDefault();
     setError(null);
@@ -164,23 +172,16 @@ export default function Home() {
 
     setChecking(true);
     try {
-      const res = await fetch("/allowlist.json", { cache: "no-store" });
-      if (!res.ok) throw new Error("Allowlist introuvable");
+      const res = await fetch("/api/auth-email", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ email: clean }),
+      });
+
+      if (!res.ok) throw new Error("Réponse invalide de l’API");
 
       const data = await res.json();
-      let list: string[] = [];
-
-      if (Array.isArray(data)) {
-        list = data;
-      } else if (Array.isArray((data as any).emails)) {
-        list = (data as any).emails;
-      }
-
-      const found = list.some(
-        (entry) => String(entry).trim().toLowerCase() === clean
-      );
-
-      if (!found) {
+      if (!data?.ok) {
         setError(
           "Cette adresse n’est pas reconnue. Vérifiez l’email utilisé lors du paiement ou contactez l’école."
         );
@@ -191,7 +192,7 @@ export default function Home() {
         }
         setUnlocked(true);
       }
-    } catch (err) {
+    } catch {
       setError(
         "Erreur lors de la vérification. Réessayez dans un instant ou contactez l’organisateur."
       );
@@ -204,11 +205,14 @@ export default function Home() {
     <>
       <Head>
         <title>DanseFlix — La Belle au Bois Dormant</title>
-        <meta name="viewport" content="width=device-width,initial-scale=1" />
+        <meta
+          name="viewport"
+          content="width=device-width,initial-scale=1"
+        />
         <meta charSet="utf-8" />
         <meta
           name="description"
-          content="Portail privé DanseFlix — captation HD de La Belle au Bois Dormant."
+          content="Portail privé DanseFlix — captation HD de La Belle au Bois Dormant, école de danse Delphine Letort."
         />
         <link rel="preconnect" href="https://fonts.googleapis.com" />
         <link
@@ -230,11 +234,14 @@ export default function Home() {
             {/* Logo + sous-titres */}
             <header className="df-header">
               <div className="df-logo-main">DanseFlix</div>
-              <div className="df-tagline">
+              <div className="df-subtitle">
+                La Belle au Bois Dormant
+              </div>
+              <div className="df-subline">
                 la plateforme de l&apos;école de danse Delphine Letort
               </div>
-              <div className="df-subtitle">
-                La Belle au Bois Dormant · Salle des concerts du Mans · Juin 2025
+              <div className="df-subline2">
+                spectacle enregistré à la salle des concerts du Mans — Juin 2025
               </div>
             </header>
 
@@ -248,10 +255,13 @@ export default function Home() {
             >
               <section className="df-intro">
                 <p>
-                  Accès réservé aux familles et élèves. Vous retrouvez ici la
-                  captation complète de{" "}
-                  <strong>La Belle au Bois Dormant</strong>, filmée sur deux
-                  représentations.
+                  Accès privé réservé aux familles et élèves. Vous retrouvez ici
+                  la captation complète de{" "}
+                  <strong>La Belle au Bois Dormant</strong>.
+                </p>
+                <p>
+                  Merci de ne pas partager ce lien publiquement afin de respecter
+                  le travail de l&apos;école, des danseurs et des équipes techniques.
                 </p>
               </section>
 
@@ -276,6 +286,8 @@ export default function Home() {
                     allowFullScreen
                     sandbox="allow-same-origin allow-scripts allow-presentation"
                   />
+                  {/* bouclier anti clic sur le player (empêche copier le lien / logo cliquable) */}
+                  <div className="player-shield" aria-hidden="true"></div>
                   <div className="ctrls">
                     <div className="btn js-toggle">Lecture</div>
                     <div className="btn js-mute">Son</div>
@@ -308,6 +320,7 @@ export default function Home() {
                     allowFullScreen
                     sandbox="allow-same-origin allow-scripts allow-presentation"
                   />
+                  <div className="player-shield" aria-hidden="true"></div>
                   <div className="ctrls">
                     <div className="btn js-toggle">Lecture</div>
                     <div className="btn js-mute">Son</div>
@@ -320,8 +333,9 @@ export default function Home() {
               </section>
 
               <p className="df-note-footer">
-                Merci de ne pas partager ce lien publiquement. Cette page est
-                réservée aux familles et danseurs ayant acquis la captation.
+                Merci de garder ce lien pour votre usage personnel. Toute
+                diffusion publique doit être validée par l&apos;école de danse
+                Delphine Letort.
               </p>
             </div>
           </div>
@@ -336,7 +350,9 @@ export default function Home() {
                   <strong>l’email utilisé lors de l’achat</strong>.
                 </p>
                 <form onSubmit={handleSubmit} className="df-login-form">
-                  <label htmlFor="email">Email utilisé lors du paiement</label>
+                  <label htmlFor="email">
+                    Email utilisé lors du paiement
+                  </label>
                   <input
                     id="email"
                     type="email"
@@ -351,8 +367,8 @@ export default function Home() {
                   </button>
                 </form>
                 <p className="df-login-help">
-                  Problème d&apos;accès ? Contactez l&apos;école ou
-                  l&apos;organisateur en indiquant votre email.
+                  Problème d&apos;accès ? Contactez l&apos;école ou l&apos;organisateur
+                  en indiquant votre email.
                 </p>
               </div>
             </div>
@@ -362,10 +378,11 @@ export default function Home() {
         {/* Styles globaux */}
         <style jsx global>{`
           :root {
-            --bg: #050516;
+            --bg: #050619;
             --pink: #ff6fb3;
             --violet: #a78bfa;
             --cyan: #00d1ff;
+            --glass: rgba(15, 23, 42, 0.9);
           }
           * {
             box-sizing: border-box;
@@ -388,24 +405,24 @@ export default function Home() {
           .df-backdrop {
             position: relative;
             min-height: 100vh;
-            padding: 32px 20px;
+            padding: 28px;
             display: flex;
             justify-content: center;
             background:
               radial-gradient(
                   1200px 800px at 8% 10%,
-                  rgba(255, 111, 179, 0.2),
+                  rgba(255, 111, 179, 0.28),
                   transparent 55%
                 ),
               radial-gradient(
                   1100px 700px at 92% 20%,
-                  rgba(167, 139, 250, 0.2),
-                  transparent 55%
+                  rgba(167, 139, 250, 0.22),
+                  transparent 60%
                 ),
               radial-gradient(
                   1000px 700px at 50% 95%,
-                  rgba(0, 209, 255, 0.16),
-                  transparent 60%
+                  rgba(56, 189, 248, 0.25),
+                  transparent 65%
                 ),
               url("/belle-poster.jpg") center/cover no-repeat;
           }
@@ -414,14 +431,19 @@ export default function Home() {
             position: absolute;
             inset: 0;
             background: radial-gradient(
-                circle at 20% 0%,
-                rgba(15, 23, 42, 0.1),
+                circle at 0% 0%,
+                rgba(15, 23, 42, 0.5),
                 transparent 55%
+              ),
+              radial-gradient(
+                circle at 100% 0%,
+                rgba(15, 23, 42, 0.65),
+                transparent 60%
               ),
               linear-gradient(
                 180deg,
-                rgba(5, 5, 20, 0.9),
-                rgba(5, 5, 20, 0.96)
+                rgba(15, 23, 42, 0.92),
+                rgba(15, 23, 42, 0.98)
               );
             pointer-events: none;
           }
@@ -429,63 +451,52 @@ export default function Home() {
           .wrap {
             position: relative;
             z-index: 1;
-            max-width: 1120px;
+            max-width: 1200px;
             margin: 0 auto;
             width: 100%;
           }
 
           .df-header {
-            margin-bottom: 26px;
-            text-align: left;
+            margin-bottom: 24px;
           }
           .df-logo-main {
-            margin: 0 0 6px;
-            font-size: clamp(46px, 9vw, 96px);
-            letter-spacing: 0.14em;
+            margin: 0 0 4px;
+            font-size: clamp(42px, 8vw, 96px);
+            letter-spacing: 0.12em;
             text-transform: uppercase;
             font-weight: 900;
-            background: linear-gradient(
-              90deg,
-              var(--pink),
-              var(--violet),
-              var(--cyan)
-            );
-            -webkit-background-clip: text;
-            background-clip: text;
-            color: transparent;
-            text-shadow: 0 22px 70px rgba(0, 0, 0, 0.9);
-          }
-          .df-tagline {
-            font-size: 13px;
-            text-transform: uppercase;
-            letter-spacing: 0.18em;
-            color: rgba(241, 245, 249, 0.8);
-            margin-bottom: 4px;
+            color: #ffffff;
+            text-shadow: 0 18px 50px rgba(0, 0, 0, 0.9);
           }
           .df-subtitle {
-            font-size: clamp(17px, 3vw, 24px);
-            font-weight: 600;
-            color: rgba(241, 245, 249, 0.96);
-            text-shadow: 0 14px 50px rgba(0, 0, 0, 0.9);
+            font-size: clamp(18px, 3vw, 28px);
+            font-weight: 700;
+            color: rgba(241, 245, 249, 0.98);
+            text-shadow: 0 12px 40px rgba(0, 0, 0, 0.9);
+          }
+          .df-subline,
+          .df-subline2 {
+            font-size: 14px;
+            opacity: 0.9;
+            color: rgba(226, 232, 240, 0.96);
           }
 
           .df-content {
-            padding: 24px 22px 30px;
-            border-radius: 28px;
-            background:
-              radial-gradient(
+            padding: 24px 20px 30px;
+            border-radius: 22px;
+            background: radial-gradient(
                 1200px 800px at 0% 0%,
-                rgba(148, 163, 184, 0.18),
-                transparent 70%
+                rgba(148, 163, 184, 0.2),
+                transparent 60%
               ),
               radial-gradient(
                 1200px 800px at 100% 0%,
                 rgba(59, 130, 246, 0.22),
-                transparent 70%
+                transparent 60%
               ),
-              rgba(8, 14, 30, 0.96);
-            border: 1px solid rgba(148, 163, 184, 0.65);
-            box-shadow: 0 30px 80px rgba(8, 14, 30, 0.9);
+              rgba(15, 23, 42, 0.96);
+            border: 1px solid rgba(148, 163, 184, 0.7);
+            box-shadow: 0 26px 70px rgba(15, 23, 42, 0.95);
           }
           .df-content-blur {
             filter: blur(4px);
@@ -519,9 +530,9 @@ export default function Home() {
             width: 100%;
             aspect-ratio: 16 / 9;
             background: #000;
-            border-radius: 20px;
+            border-radius: 18px;
             overflow: hidden;
-            border: 1px solid rgba(255, 255, 255, 0.5);
+            border: 1px solid rgba(255, 255, 255, 0.32);
           }
 
           .poster {
@@ -535,9 +546,9 @@ export default function Home() {
             position: absolute;
             inset: 0;
             background: radial-gradient(
-              80% 60% at 50% 50%,
-              transparent 55%,
-              rgba(0, 0, 0, 0.5)
+              75% 55% at 50% 50%,
+              transparent 60%,
+              rgba(0, 0, 0, 0.4)
             );
           }
 
@@ -546,20 +557,16 @@ export default function Home() {
             left: 50%;
             top: 50%;
             transform: translate(-50%, -50%);
-            width: 104px;
-            height: 104px;
+            width: 96px;
+            height: 96px;
             border-radius: 999px;
-            background: radial-gradient(
-              circle at 30% 20%,
-              #ffe4f4,
-              #ff6fb3 40%,
-              #a855f7 80%
-            );
-            box-shadow: 0 22px 70px rgba(0, 0, 0, 0.9);
+            background: linear-gradient(135deg, var(--violet), var(--pink));
+            box-shadow: 0 18px 60px rgba(0, 0, 0, 0.8);
             display: grid;
             place-items: center;
             cursor: pointer;
             border: none;
+            z-index: 3;
           }
           .play svg {
             width: 40px;
@@ -574,6 +581,16 @@ export default function Home() {
             height: 100%;
             border: 0;
             display: none;
+            z-index: 1;
+          }
+
+          /* bouclier transparent au-dessus du player pour empêcher clics YouTube */
+          .player-shield {
+            position: absolute;
+            inset: 0;
+            z-index: 2;
+            pointer-events: auto;
+            background: transparent;
           }
 
           .ctrls {
@@ -586,16 +603,17 @@ export default function Home() {
             align-items: center;
             opacity: 0;
             transition: opacity 0.25s;
+            z-index: 4;
           }
           .player:hover .ctrls {
             opacity: 1;
           }
 
           .btn {
-            background: rgba(0, 0, 0, 0.6);
-            border: 1px solid rgba(255, 255, 255, 0.3);
-            border-radius: 999px;
-            padding: 8px 14px;
+            background: rgba(0, 0, 0, 0.55);
+            border: 1px solid rgba(255, 255, 255, 0.18);
+            border-radius: 12px;
+            padding: 8px 12px;
             font-size: 0.85rem;
             cursor: pointer;
             user-select: none;
@@ -604,7 +622,7 @@ export default function Home() {
           .prog {
             flex: 1;
             height: 6px;
-            background: rgba(255, 255, 255, 0.25);
+            background: rgba(255, 255, 255, 0.18);
             border-radius: 9999px;
             position: relative;
             cursor: pointer;
@@ -620,9 +638,9 @@ export default function Home() {
           }
 
           .df-note-footer {
-            margin-top: 8px;
+            margin-top: 10px;
             font-size: 12px;
-            opacity: 0.82;
+            opacity: 0.8;
           }
 
           /* Overlay login */
@@ -634,24 +652,24 @@ export default function Home() {
             justify-content: center;
             padding: 16px;
             z-index: 10;
-            backdrop-filter: blur(8px);
+            backdrop-filter: blur(6px);
           }
           .df-login-card {
             width: 100%;
-            max-width: 420px;
+            max-width: 460px;
             background: radial-gradient(
                 900px 700px at 0% 0%,
-                rgba(59, 130, 246, 0.4),
+                rgba(59, 130, 246, 0.45),
                 transparent 60%
               ),
               radial-gradient(
                 900px 700px at 100% 0%,
-                rgba(14, 165, 233, 0.45),
+                rgba(14, 165, 233, 0.6),
                 transparent 60%
               ),
-              #020617;
+              #0f172a;
             border-radius: 24px;
-            padding: 24px 20px 20px;
+            padding: 24px 22px 20px;
             border: 1px solid rgba(191, 219, 254, 0.9);
             box-shadow: 0 26px 60px rgba(15, 23, 42, 0.95);
             color: #e5f2ff;
@@ -725,14 +743,14 @@ export default function Home() {
 
           @media (max-width: 768px) {
             .df-backdrop {
-              padding: 20px 14px;
+              padding: 18px;
             }
             .df-content {
               padding: 18px 14px 22px;
-              border-radius: 20px;
+              border-radius: 18px;
             }
             .player {
-              border-radius: 16px;
+              border-radius: 14px;
             }
           }
         `}</style>
