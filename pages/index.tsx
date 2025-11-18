@@ -208,7 +208,7 @@ export default function Home() {
         <meta charSet="utf-8" />
         <meta
           name="description"
-          content="Portail privé DanseFlix — captation HD/4K de La Belle au Bois Dormant."
+          content="Portail privé DanseFlix — captation HD de La Belle au Bois Dormant."
         />
         <link rel="preconnect" href="https://fonts.googleapis.com" />
         <link
@@ -227,13 +227,15 @@ export default function Home() {
           <div className="df-overlay-gradient" />
 
           <div className="wrap">
-            {/* Logo blanc + sous-titres */}
+            {/* Logo + sous-titres */}
             <header className="df-header">
               <div className="df-logo-main">DanseFlix</div>
-              <div className="df-subline">
+              <div className="df-tagline">
                 la plateforme de l&apos;école de danse Delphine Letort
               </div>
-              <div className="df-subtitle">La Belle au Bois Dormant</div>
+              <div className="df-subtitle">
+                La Belle au Bois Dormant · Salle des concerts du Mans · Juin 2025
+              </div>
             </header>
 
             {/* Contenu vidéos flouté tant que non connecté */}
@@ -247,7 +249,9 @@ export default function Home() {
               <section className="df-intro">
                 <p>
                   Accès réservé aux familles et élèves. Vous retrouvez ici la
-                  captation de <strong>La Belle au Bois Dormant</strong>.
+                  captation complète de{" "}
+                  <strong>La Belle au Bois Dormant</strong>, filmée sur deux
+                  représentations.
                 </p>
               </section>
 
@@ -358,11 +362,10 @@ export default function Home() {
         {/* Styles globaux */}
         <style jsx global>{`
           :root {
-            --bg: #0b0a1a;
+            --bg: #050516;
             --pink: #ff6fb3;
             --violet: #a78bfa;
             --cyan: #00d1ff;
-            --glass: rgba(255, 255, 255, 0.06);
           }
           * {
             box-sizing: border-box;
@@ -385,23 +388,23 @@ export default function Home() {
           .df-backdrop {
             position: relative;
             min-height: 100vh;
-            padding: 28px;
+            padding: 32px 20px;
             display: flex;
             justify-content: center;
             background:
               radial-gradient(
                   1200px 800px at 8% 10%,
-                  rgba(255, 111, 179, 0.18),
-                  transparent 50%
+                  rgba(255, 111, 179, 0.2),
+                  transparent 55%
                 ),
               radial-gradient(
                   1100px 700px at 92% 20%,
-                  rgba(167, 139, 250, 0.16),
+                  rgba(167, 139, 250, 0.2),
                   transparent 55%
                 ),
               radial-gradient(
                   1000px 700px at 50% 95%,
-                  rgba(0, 209, 255, 0.12),
+                  rgba(0, 209, 255, 0.16),
                   transparent 60%
                 ),
               url("/belle-poster.jpg") center/cover no-repeat;
@@ -410,65 +413,79 @@ export default function Home() {
           .df-overlay-gradient {
             position: absolute;
             inset: 0;
-            background: linear-gradient(
-              180deg,
-              rgba(5, 5, 20, 0.85),
-              rgba(5, 5, 20, 0.95)
-            );
+            background: radial-gradient(
+                circle at 20% 0%,
+                rgba(15, 23, 42, 0.1),
+                transparent 55%
+              ),
+              linear-gradient(
+                180deg,
+                rgba(5, 5, 20, 0.9),
+                rgba(5, 5, 20, 0.96)
+              );
             pointer-events: none;
           }
 
           .wrap {
             position: relative;
             z-index: 1;
-            max-width: 1200px;
+            max-width: 1120px;
             margin: 0 auto;
             width: 100%;
           }
 
           .df-header {
-            margin-bottom: 24px;
+            margin-bottom: 26px;
+            text-align: left;
           }
           .df-logo-main {
-            margin: 0 0 4px;
-            font-size: clamp(42px, 8vw, 96px);
-            letter-spacing: 0.1em;
+            margin: 0 0 6px;
+            font-size: clamp(46px, 9vw, 96px);
+            letter-spacing: 0.14em;
             text-transform: uppercase;
             font-weight: 900;
-            color: #ffffff;
-            text-shadow: 0 18px 50px rgba(0, 0, 0, 0.9);
+            background: linear-gradient(
+              90deg,
+              var(--pink),
+              var(--violet),
+              var(--cyan)
+            );
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+            text-shadow: 0 22px 70px rgba(0, 0, 0, 0.9);
           }
-          .df-subline {
-            font-size: 14px;
-            font-weight: 500;
+          .df-tagline {
+            font-size: 13px;
             text-transform: uppercase;
-            letter-spacing: 0.12em;
-            color: rgba(241, 245, 249, 0.85);
+            letter-spacing: 0.18em;
+            color: rgba(241, 245, 249, 0.8);
             margin-bottom: 4px;
           }
           .df-subtitle {
-            font-size: clamp(18px, 3vw, 28px);
+            font-size: clamp(17px, 3vw, 24px);
             font-weight: 600;
-            color: rgba(241, 245, 249, 0.95);
-            text-shadow: 0 12px 40px rgba(0, 0, 0, 0.9);
+            color: rgba(241, 245, 249, 0.96);
+            text-shadow: 0 14px 50px rgba(0, 0, 0, 0.9);
           }
 
           .df-content {
-            padding: 24px 20px 30px;
-            border-radius: 22px;
-            background: radial-gradient(
+            padding: 24px 22px 30px;
+            border-radius: 28px;
+            background:
+              radial-gradient(
                 1200px 800px at 0% 0%,
-                rgba(148, 163, 184, 0.14),
-                transparent 60%
+                rgba(148, 163, 184, 0.18),
+                transparent 70%
               ),
               radial-gradient(
                 1200px 800px at 100% 0%,
-                rgba(59, 130, 246, 0.16),
-                transparent 60%
+                rgba(59, 130, 246, 0.22),
+                transparent 70%
               ),
-              rgba(15, 23, 42, 0.96);
-            border: 1px solid rgba(148, 163, 184, 0.7);
-            box-shadow: 0 26px 70px rgba(15, 23, 42, 0.95);
+              rgba(8, 14, 30, 0.96);
+            border: 1px solid rgba(148, 163, 184, 0.65);
+            box-shadow: 0 30px 80px rgba(8, 14, 30, 0.9);
           }
           .df-content-blur {
             filter: blur(4px);
@@ -502,9 +519,9 @@ export default function Home() {
             width: 100%;
             aspect-ratio: 16 / 9;
             background: #000;
-            border-radius: 18px;
+            border-radius: 20px;
             overflow: hidden;
-            border: 1px solid rgba(255, 255, 255, 0.32);
+            border: 1px solid rgba(255, 255, 255, 0.5);
           }
 
           .poster {
@@ -518,9 +535,9 @@ export default function Home() {
             position: absolute;
             inset: 0;
             background: radial-gradient(
-              75% 55% at 50% 50%,
-              transparent 60%,
-              rgba(0, 0, 0, 0.4)
+              80% 60% at 50% 50%,
+              transparent 55%,
+              rgba(0, 0, 0, 0.5)
             );
           }
 
@@ -529,11 +546,16 @@ export default function Home() {
             left: 50%;
             top: 50%;
             transform: translate(-50%, -50%);
-            width: 96px;
-            height: 96px;
+            width: 104px;
+            height: 104px;
             border-radius: 999px;
-            background: linear-gradient(135deg, var(--violet), var(--pink));
-            box-shadow: 0 18px 60px rgba(0, 0, 0, 0.8);
+            background: radial-gradient(
+              circle at 30% 20%,
+              #ffe4f4,
+              #ff6fb3 40%,
+              #a855f7 80%
+            );
+            box-shadow: 0 22px 70px rgba(0, 0, 0, 0.9);
             display: grid;
             place-items: center;
             cursor: pointer;
@@ -570,10 +592,10 @@ export default function Home() {
           }
 
           .btn {
-            background: rgba(0, 0, 0, 0.55);
-            border: 1px solid rgba(255, 255, 255, 0.18);
-            border-radius: 12px;
-            padding: 8px 12px;
+            background: rgba(0, 0, 0, 0.6);
+            border: 1px solid rgba(255, 255, 255, 0.3);
+            border-radius: 999px;
+            padding: 8px 14px;
             font-size: 0.85rem;
             cursor: pointer;
             user-select: none;
@@ -582,7 +604,7 @@ export default function Home() {
           .prog {
             flex: 1;
             height: 6px;
-            background: rgba(255, 255, 255, 0.18);
+            background: rgba(255, 255, 255, 0.25);
             border-radius: 9999px;
             position: relative;
             cursor: pointer;
@@ -598,9 +620,9 @@ export default function Home() {
           }
 
           .df-note-footer {
-            margin-top: 10px;
+            margin-top: 8px;
             font-size: 12px;
-            opacity: 0.8;
+            opacity: 0.82;
           }
 
           /* Overlay login */
@@ -612,7 +634,7 @@ export default function Home() {
             justify-content: center;
             padding: 16px;
             z-index: 10;
-            backdrop-filter: blur(6px);
+            backdrop-filter: blur(8px);
           }
           .df-login-card {
             width: 100%;
@@ -624,13 +646,13 @@ export default function Home() {
               ),
               radial-gradient(
                 900px 700px at 100% 0%,
-                rgba(14, 165, 233, 0.5),
+                rgba(14, 165, 233, 0.45),
                 transparent 60%
               ),
-              #0f172a;
-            border-radius: 22px;
+              #020617;
+            border-radius: 24px;
             padding: 24px 20px 20px;
-            border: 1px solid rgba(191, 219, 254, 0.85);
+            border: 1px solid rgba(191, 219, 254, 0.9);
             box-shadow: 0 26px 60px rgba(15, 23, 42, 0.95);
             color: #e5f2ff;
           }
@@ -703,14 +725,14 @@ export default function Home() {
 
           @media (max-width: 768px) {
             .df-backdrop {
-              padding: 18px;
+              padding: 20px 14px;
             }
             .df-content {
               padding: 18px 14px 22px;
-              border-radius: 18px;
+              border-radius: 20px;
             }
             .player {
-              border-radius: 14px;
+              border-radius: 16px;
             }
           }
         `}</style>
