@@ -132,7 +132,7 @@ export default function Home() {
                 <div className="player">
                   <div className="yt-top-mask" />
                   <iframe
-                    src="https://www.youtube-nocookie.com/embed/AI_UteIH42U?rel=0&modestbranding=1&showinfo=0&disablekb=1&iv_load_policy=3&vq=highres"
+                    src="https://www.youtube-nocookie.com/embed/0euoXutCxYM?rel=0&modestbranding=1&showinfo=0&disablekb=1&iv_load_policy=3&vq=highres"
                     title="DanseFlix Samedi"
                     allow="accelerometer; encrypted-media; gyroscope; picture-in-picture"
                     allowFullScreen
