@@ -101,7 +101,13 @@ export default function Home() {
           <div className="wrap">
             {/* HEADER */}
             <header className="df-header">
-              <div className="df-logo-main">DanseFlix</div>
+              <div className="df-logo-wrapper">
+                <img
+                  src="/danseflix.png"
+                  alt="DanseFlix - La chaîne vidéo du centre de danse Delphine Letort"
+                  className="df-logo-main"
+                />
+              </div>
               <div className="df-subtitle">
                 la plateforme de l&apos;école de danse Delphine Letort
               </div>
@@ -321,15 +327,20 @@ export default function Home() {
             margin-bottom: 24px;
           }
 
-          .df-logo-main {
-            margin: 0 0 6px;
-            font-size: clamp(42px, 8vw, 96px);
-            letter-spacing: 0.16em;
-            text-transform: uppercase;
-            font-weight: 900;
-            color: #ffffff;
-            text-shadow: 0 18px 50px rgba(0, 0, 0, 0.9);
+          .df-logo-wrapper {
+            max-width: 900px;
+            width: 100%;
           }
+
+          .df-logo-main {
+            display: block;
+            width: 100%;
+            height: auto;
+            border-radius: 12px;
+            box-shadow: 0 18px 50px rgba(0, 0, 0, 0.9);
+            margin: 0 0 10px;
+          }
+
           .df-subtitle {
             font-size: clamp(16px, 2.5vw, 22px);
             font-weight: 600;
@@ -411,14 +422,14 @@ export default function Home() {
             top: 0;
             left: 0;
             right: 0;
-            height: 60px; /* ajuste si besoin */
+            height: 60px;
             background: linear-gradient(
               180deg,
               rgba(15, 23, 42, 0.98),
               transparent
             );
             z-index: 2;
-            pointer-events: auto; /* empêche de cliquer sur "copier le lien" */
+            pointer-events: auto;
           }
 
           .df-note-footer {
