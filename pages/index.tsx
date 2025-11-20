@@ -162,37 +162,83 @@ export default function Home() {
           </div>
 
           {/* OVERLAY LOGIN */}
-          {!unlocked && (
-            <div className="df-login-overlay">
-              <div className="df-login-card">
-                <h2>Accès privé DanseFlix</h2>
-                <p>
-                  Pour accéder aux vidéos, merci d&apos;entrer{" "}
-                  <strong>l&apos;email utilisé lors de l&apos;achat</strong>.
-                </p>
-                <form onSubmit={handleSubmit} className="df-login-form">
-                  <label htmlFor="email">Email utilisé lors du paiement</label>
-                  <input
-                    id="email"
-                    type="email"
-                    required
-                    value={email}
-                    onChange={(e) => setEmail(e.target.value)}
-                    placeholder="prenom.nom@email.com"
-                  />
-                  {error && <div className="df-error">{error}</div>}
-                  <button type="submit" disabled={checking}>
-                    {checking ? "Vérification en cours…" : "Accéder aux vidéos"}
-                  </button>
-                </form>
-                <p className="df-login-help">
-                  Problème d&apos;accès ? Contactez l&apos;école ou
-                  l&apos;organisateur en indiquant votre email.
-                </p>
-              </div>
-            </div>
-          )}
-        </div>
+  {!unlocked && (
+  <div className="df-login-overlay">
+    <div className="df-login-card">
+      <h2>Accès privé DanseFlix</h2>
+      <p>
+        Pour accéder aux vidéos, merci d&apos;entrer{" "}
+        <strong>l&apos;email utilisé lors de l&apos;achat</strong>.
+      </p>
+
+      <form onSubmit={handleSubmit} className="df-login-form">
+        <label htmlFor="email">Email utilisé lors du paiement</label>
+        <input
+          id="email"
+          type="email"
+          required
+          value={email}
+          onChange={(e) => setEmail(e.target.value)}
+          placeholder="prenom.nom@email.com"
+        />
+        {error && <div className="df-error">{error}</div>}
+        <button type="submit" disabled={checking}>
+          {checking ? "Vérification en cours…" : "Accéder aux vidéos"}
+        </button>
+      </form>
+
+      <p className="df-login-help">
+        Problème d&apos;accès ? Contactez l&apos;école ou
+        l&apos;organisateur en indiquant votre email.
+      </p>
+
+      {/* 💳 BOUTON STRIPE D’ACHAT */}
+      <div
+        style={{
+          marginTop: 18,
+          paddingTop: 12,
+          borderTop: "1px solid rgba(191,219,254,0.35)",
+        }}
+      >
+        <p style={{ fontSize: 12, margin: "0 0 8px", opacity: 0.9 }}>
+          Vous n&apos;avez pas encore acheté l&apos;accès à la plateforme ?
+        </p>
+        <a
+          href="https://buy.stripe.com/aFabITgIOg31euTe1w3ks01"
+          target="_blank"
+          rel="noreferrer"
+          style={{
+            display: "inline-block",
+            width: "100%",
+            textAlign: "center",
+            padding: "9px 14px",
+            borderRadius: 999,
+            textDecoration: "none",
+            fontWeight: 600,
+            fontSize: 14,
+            background:
+              "linear-gradient(135deg,#22c55e,#16a34a,#15803d)",
+            color: "#0b1020",
+            boxShadow: "0 14px 40px rgba(15,23,42,0.85)",
+          }}
+        >
+          Achetez un accès à la plateforme
+        </a>
+        <p
+          style={{
+            fontSize: 11,
+            marginTop: 6,
+            opacity: 0.8,
+          }}
+        >
+          Après le paiement, votre email sera pris en compte pour l&apos;accès
+          aux vidéos.
+        </p>
+      </div>
+    </div>
+  </div>
+)}
+
 
         {/* STYLES */}
         <style jsx global>{`
