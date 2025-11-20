@@ -1,4 +1,3 @@
-import type { NextApiRequest, NextApiResponse } from "next";
 import Stripe from "stripe";
 import nodemailer from "nodemailer";
 
@@ -8,14 +7,13 @@ export const config = {
   },
 };
 
-const stripe = new Stripe(process.env.STRIPE_SECRET_KEY as string, {
-  apiVersion: "2024-06-20" as any,
+const stripe = new Stripe(process.env.STRIPE_SECRET_KEY, {
+  apiVersion: "2024-06-20",
 });
 
-// Secret du webhook (Stripe → Webhooks)
-const endpointSecret = process.env.STRIPE_WEBHOOK_SECRET as string;
+const endpointSecret = process.env.STRIPE_WEBHOOK_SECRET;
 
-// Transport SMTP pour envoyer l'email au parent
+// Transport SMTP pour envoyer l'email
 const transporter = nodemailer.createTransport({
   host: process.env.SMTP_HOST,
   port: Number(process.env.SMTP_PORT || 587),
@@ -26,7 +24,7 @@ const transporter = nodemailer.createTransport({
   },
 });
 
-async function sendCustomerEmail(to: string) {
+async function sendCustomerEmail(to) {
   const from = process.env.SMTP_FROM || process.env.SMTP_USER;
 
   await transporter.sendMail({
@@ -49,38 +47,36 @@ async function sendCustomerEmail(to: string) {
   });
 }
 
-export default async function handler(
-  req: NextApiRequest,
-  res: NextApiResponse
-) {
+export default async function handler(req, res) {
   if (req.method !== "POST") {
     res.setHeader("Allow", "POST");
     return res.status(405).end("Method Not Allowed");
   }
 
-  const sig = req.headers["stripe-signature"] as string;
+  const sig = req.headers["stripe-signature"];
 
-  // récupérer le raw body
-  const chunks: Uint8Array[] = [];
-  await new Promise<void>((resolve) => {
+  const chunks = [];
+  await new Promise((resolve) => {
     req.on("data", (chunk) => chunks.push(chunk));
     req.on("end", () => resolve());
   });
   const rawBody = Buffer.concat(chunks);
 
-  let event: Stripe.Event;
+  let event;
 
   try {
     event = stripe.webhooks.constructEvent(rawBody, sig, endpointSecret);
-  } catch (err: any) {
+  } catch (err) {
     console.error("Erreur webhook Stripe:", err.message);
     return res.status(400).send(`Webhook Error: ${err.message}`);
   }
 
   if (event.type === "checkout.session.completed") {
-    const session = event.data.object as Stripe.Checkout.Session;
+    const session = event.data.object;
     const email =
-      session.customer_details?.email || session.customer_email || undefined;
+      (session.customer_details && session.customer_details.email) ||
+      session.customer_email ||
+      undefined;
 
     if (email) {
       console.log("[STRIPE] Paiement reçu pour", email);
