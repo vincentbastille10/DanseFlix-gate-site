@@ -325,11 +325,16 @@ export default function Home() {
 
           .df-header {
             margin-bottom: 24px;
+            text-align: center;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
           }
 
           .df-logo-wrapper {
             max-width: 900px;
             width: 100%;
+            margin: 0 auto;
           }
 
           .df-logo-main {
@@ -338,7 +343,7 @@ export default function Home() {
             height: auto;
             border-radius: 12px;
             box-shadow: 0 18px 50px rgba(0, 0, 0, 0.9);
-            margin: 0 0 10px;
+            margin: 0 auto 10px;
           }
 
           .df-subtitle {
