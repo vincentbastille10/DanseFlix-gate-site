@@ -101,15 +101,16 @@ export default function Home() {
           <div className="wrap">
             {/* HEADER */}
             <header className="df-header">
-              <div className="df-logo-wrapper">
+              {/* BANNIÈRE FULL WIDTH */}
+              <div className="df-banner-full">
                 <img
                   src="/danseflix.png"
                   alt="DanseFlix - La chaîne vidéo du centre de danse Delphine Letort"
-                  className="df-logo-main"
+                  className="df-banner-img"
                 />
               </div>
               <div className="df-subtitle">
-                ...
+                la plateforme de l&apos;école de danse Delphine Letort
               </div>
               <div className="df-subsubtitle">
                 spectacle enregistré à la salle des concerts du Mans – Juin 2025
@@ -331,6 +332,25 @@ export default function Home() {
             align-items: center;
           }
 
+          /* BANNIÈRE FULL WIDTH */
+          .df-banner-full {
+            width: 100vw;
+            position: relative;
+            left: 50%;
+            right: 50%;
+            margin-left: -50vw;
+            margin-right: -50vw;
+          }
+
+          .df-banner-img {
+            width: 100%;
+            height: auto;
+            display: block;
+            border-radius: 12px;
+            box-shadow: 0 18px 50px rgba(0, 0, 0, 0.9);
+          }
+
+          /* Anciennes classes gardées au cas où tu les réutilises plus tard */
           .df-logo-wrapper {
             max-width: 900px;
             width: 100%;
@@ -351,6 +371,7 @@ export default function Home() {
             font-weight: 600;
             color: rgba(241, 245, 249, 0.96);
             text-shadow: 0 12px 40px rgba(0, 0, 0, 0.9);
+            margin-top: 10px;
           }
           .df-subsubtitle {
             font-size: 14px;
@@ -546,6 +567,10 @@ export default function Home() {
             }
             .player {
               border-radius: 14px;
+            }
+
+            .df-banner-full {
+              border-radius: 0;
             }
           }
         `}</style>
