@@ -108,9 +108,7 @@ export default function Home() {
                   className="df-logo-main"
                 />
               </div>
-              <div className="df-subtitle">
-                ...
-              </div>
+              <div className="df-subtitle">...</div>
               <div className="df-subsubtitle">
                 spectacle enregistré à la salle des concerts du Mans – Juin 2025
               </div>
@@ -136,9 +134,11 @@ export default function Home() {
               <section className="df-video-block">
                 <h2>Samedi — La Belle au bois dormant</h2>
                 <div className="player">
+                  {/* masque haut pour "Copier le lien" */}
                   <div className="yt-top-mask" />
-                  {/* CACHE SUR LE LOGO YOUTUBE */}
-                  <div className="yt-logo-mask" />
+                  {/* boucliers transparents pour "Regarder sur YouTube" */}
+                  <div className="yt-link-shield yt-link-shield-left" />
+                  <div className="yt-link-shield yt-link-shield-right" />
                   <iframe
                     src="https://www.youtube-nocookie.com/embed/0euoXutCxYM?rel=0&modestbranding=1&showinfo=0&disablekb=1&iv_load_policy=3&vq=highres"
                     title="DanseFlix Samedi"
@@ -152,9 +152,11 @@ export default function Home() {
               <section className="df-video-block">
                 <h2>Dimanche — La Belle au bois dormant</h2>
                 <div className="player">
+                  {/* masque haut pour "Copier le lien" */}
                   <div className="yt-top-mask" />
-                  {/* CACHE SUR LE LOGO YOUTUBE */}
-                  <div className="yt-logo-mask" />
+                  {/* boucliers transparents pour "Regarder sur YouTube" */}
+                  <div className="yt-link-shield yt-link-shield-left" />
+                  <div className="yt-link-shield yt-link-shield-right" />
                   <iframe
                     src="https://www.youtube-nocookie.com/embed/Ky6x74z20N8?rel=0&modestbranding=1&showinfo=0&disablekb=1&iv_load_policy=3&vq=highres"
                     title="DanseFlix Dimanche"
@@ -439,16 +441,23 @@ export default function Home() {
             pointer-events: auto;
           }
 
-          /* Cache noir uniquement sur le logo "YouTube" (en bas à droite) */
-          .yt-logo-mask {
+          /* Boucliers transparents pour rendre "Regarder sur YouTube" inactif
+             (gauche + droite) sans rien afficher à l'image */
+          .yt-link-shield {
             position: absolute;
-            bottom: 6px;
-            right: 10px;
-            width: 90px;  /* cache le mot "YouTube" + logo, pas l'engrenage */
-            height: 32px;
-            background: #000;
+            bottom: 10px; /* zone du bandeau "Regarder sur YouTube" */
+            height: 55px;
             z-index: 3;
-            pointer-events: none; /* ne bloque AUCUN bouton */
+            background: transparent;
+            pointer-events: auto; /* intercepte le clic */
+          }
+          .yt-link-shield-left {
+            left: 0;
+            width: 260px; /* couvre le bandeau de gauche */
+          }
+          .yt-link-shield-right {
+            right: 0;
+            width: 200px; /* couvre la zone du logo YouTube à droite */
           }
 
           .df-note-footer {
@@ -469,7 +478,8 @@ export default function Home() {
             backdrop-filter: blur(6px);
           }
           .df-login-card {
-            width: 100%;
+            width: 100%
+            ;
             max-width: 420px;
             background: radial-gradient(
                 900px 700px at 0% 0%,
