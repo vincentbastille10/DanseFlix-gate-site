@@ -441,23 +441,23 @@ export default function Home() {
             pointer-events: auto;
           }
 
-          /* Boucliers transparents pour rendre "Regarder sur YouTube" inactif
-             (gauche + droite) sans rien afficher à l'image */
+          /* Boucliers transparents pour rendre "Regarder sur YouTube" + logo inactifs */
           .yt-link-shield {
             position: absolute;
-            bottom: 10px; /* zone du bandeau "Regarder sur YouTube" */
-            height: 55px;
+            bottom: 0;      /* collé au bas des contrôles */
+            height: 80px;   /* bien plus haut que le bandeau */
             z-index: 3;
             background: transparent;
             pointer-events: auto; /* intercepte le clic */
+            cursor: default;
           }
           .yt-link-shield-left {
             left: 0;
-            width: 260px; /* couvre le bandeau de gauche */
+            width: 280px;   /* couvre tout le bloc "Regarder sur YouTube" à gauche */
           }
           .yt-link-shield-right {
-            right: 0;
-            width: 200px; /* couvre la zone du logo YouTube à droite */
+            right: 60px;    /* laisse ~60px libres pour le bouton plein écran */
+            width: 150px;   /* couvre le logo YouTube + marge */
           }
 
           .df-note-footer {
@@ -478,8 +478,7 @@ export default function Home() {
             backdrop-filter: blur(6px);
           }
           .df-login-card {
-            width: 100%
-            ;
+            width: 100%;
             max-width: 420px;
             background: radial-gradient(
                 900px 700px at 0% 0%,
