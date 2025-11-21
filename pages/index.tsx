@@ -444,8 +444,8 @@ export default function Home() {
           /* Boucliers transparents pour rendre "Regarder sur YouTube" + logo inactifs */
           .yt-link-shield {
             position: absolute;
-            bottom: 0;
-            height: 80px;
+            bottom: -10px;   /* descend un peu sous la barre des contrôles */
+            height: 110px;   /* couvre au-dessus et en dessous du logo */
             z-index: 3;
             background: transparent;
             pointer-events: auto;
@@ -456,8 +456,8 @@ export default function Home() {
             width: 280px;
           }
           .yt-link-shield-right {
-            right: 40px;   /* élargi d’environ 0,5 cm vers la droite */
-            width: 168px;  /* couvre tout le logo YouTube + marge */
+            right: 48px;   /* laisse ~48px libres pour le bouton plein écran */
+            width: 190px;  /* couvre le logo YouTube + zone en dessous */
           }
 
           .df-note-footer {
