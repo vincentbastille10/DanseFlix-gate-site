@@ -109,7 +109,7 @@ export default function Home() {
                 />
               </div>
               <div className="df-subtitle">
-                la plateforme de l&apos;école de danse Delphine Letort
+                ...
               </div>
               <div className="df-subsubtitle">
                 spectacle enregistré à la salle des concerts du Mans – Juin 2025
