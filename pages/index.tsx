@@ -137,6 +137,8 @@ export default function Home() {
                 <h2>Samedi — La Belle au bois dormant</h2>
                 <div className="player">
                   <div className="yt-top-mask" />
+                  {/* CACHE SUR LE LOGO YOUTUBE */}
+                  <div className="yt-logo-mask" />
                   <iframe
                     src="https://www.youtube-nocookie.com/embed/0euoXutCxYM?rel=0&modestbranding=1&showinfo=0&disablekb=1&iv_load_policy=3&vq=highres"
                     title="DanseFlix Samedi"
@@ -151,6 +153,8 @@ export default function Home() {
                 <h2>Dimanche — La Belle au bois dormant</h2>
                 <div className="player">
                   <div className="yt-top-mask" />
+                  {/* CACHE SUR LE LOGO YOUTUBE */}
+                  <div className="yt-logo-mask" />
                   <iframe
                     src="https://www.youtube-nocookie.com/embed/Ky6x74z20N8?rel=0&modestbranding=1&showinfo=0&disablekb=1&iv_load_policy=3&vq=highres"
                     title="DanseFlix Dimanche"
@@ -433,6 +437,18 @@ export default function Home() {
             );
             z-index: 2;
             pointer-events: auto;
+          }
+
+          /* Cache noir uniquement sur le logo "YouTube" (en bas à droite) */
+          .yt-logo-mask {
+            position: absolute;
+            bottom: 6px;
+            right: 10px;
+            width: 90px;  /* cache le mot "YouTube" + logo, pas l'engrenage */
+            height: 32px;
+            background: #000;
+            z-index: 3;
+            pointer-events: none; /* ne bloque AUCUN bouton */
           }
 
           .df-note-footer {
