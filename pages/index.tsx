@@ -200,8 +200,7 @@ export default function Home() {
                 </form>
 
                 <p className="df-login-help">
-                  Problème d&apos;accès ? Contactez l&apos;école ou
-                  l&apos;organisateur en indiquant votre email.
+                  Problème d&apos;accès ? Contactez spectramediabots@gmail.com en indiquant votre email.
                 </p>
 
                 {/* 💳 BOUTON STRIPE D’ACHAT */}
