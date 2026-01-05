@@ -134,11 +134,6 @@ export default function Home() {
               <section className="df-video-block">
                 <h2>Samedi — La Belle au bois dormant</h2>
                 <div className="player">
-                  {/* masque haut pour "Copier le lien" */}
-                  <div className="yt-top-mask" />
-                  {/* boucliers transparents pour "Regarder sur YouTube" */}
-                  <div className="yt-link-shield yt-link-shield-left" />
-                  <div className="yt-link-shield yt-link-shield-right" />
                   <iframe
                     src="https://www.youtube-nocookie.com/embed/0euoXutCxYM?rel=0&modestbranding=1&showinfo=0&disablekb=1&iv_load_policy=3&vq=highres"
                     title="DanseFlix Samedi"
@@ -152,11 +147,6 @@ export default function Home() {
               <section className="df-video-block">
                 <h2>Dimanche — La Belle au bois dormant</h2>
                 <div className="player">
-                  {/* masque haut pour "Copier le lien" */}
-                  <div className="yt-top-mask" />
-                  {/* boucliers transparents pour "Regarder sur YouTube" */}
-                  <div className="yt-link-shield yt-link-shield-left" />
-                  <div className="yt-link-shield yt-link-shield-right" />
                   <iframe
                     src="https://www.youtube-nocookie.com/embed/Ky6x74z20N8?rel=0&modestbranding=1&showinfo=0&disablekb=1&iv_load_policy=3&vq=highres"
                     title="DanseFlix Dimanche"
@@ -422,41 +412,6 @@ export default function Home() {
             height: 100%;
             border: 0;
             display: block;
-          }
-
-          /* Masque la zone du haut de YouTube (avatar, titre, "copier le lien") */
-          .yt-top-mask {
-            position: absolute;
-            top: 0;
-            left: 0;
-            right: 0;
-            height: 60px;
-            background: linear-gradient(
-              180deg,
-              rgba(15, 23, 42, 0.98),
-              transparent
-            );
-            z-index: 2;
-            pointer-events: auto;
-          }
-
-          /* Boucliers transparents pour rendre "Regarder sur YouTube" + logo inactifs */
-          .yt-link-shield {
-            position: absolute;
-            bottom: -10px;   /* descend un peu sous la barre des contrôles */
-            height: 110px;   /* couvre au-dessus et en dessous du logo */
-            z-index: 3;
-            background: transparent;
-            pointer-events: auto;
-            cursor: default;
-          }
-          .yt-link-shield-left {
-            left: 0;
-            width: 280px;
-          }
-          .yt-link-shield-right {
-            right: 48px;   /* laisse ~48px libres pour le bouton plein écran */
-            width: 190px;  /* couvre le logo YouTube + zone en dessous */
           }
 
           .df-note-footer {
