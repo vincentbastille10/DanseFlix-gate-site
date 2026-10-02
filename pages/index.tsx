@@ -6,12 +6,17 @@ export default function Home() {
   const [checking, setChecking] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [unlocked, setUnlocked] = useState(false);
+  const [userEmail, setUserEmail] = useState<string | null>(null);
 
   // Déjà validé sur ce navigateur ?
   useEffect(() => {
     if (typeof window === "undefined") return;
     const ok = window.localStorage.getItem("danseflix_access_ok");
-    if (ok === "1") setUnlocked(true);
+    const saved = window.localStorage.getItem("danseflix_email");
+    if (ok === "1") {
+      setUnlocked(true);
+      setUserEmail(saved);
+    }
   }, []);
 
   // Blocage du clic droit (pour éviter le menu contextuel sur la vidéo)
@@ -22,6 +27,15 @@ export default function Home() {
       document.removeEventListener("contextmenu", blockCtx);
     };
   }, []);
+
+  // Logout
+  function handleLogout() {
+    window.localStorage.removeItem("danseflix_access_ok");
+    window.localStorage.removeItem("danseflix_email");
+    setUnlocked(false);
+    setUserEmail(null);
+    setEmail("");
+  }
 
   // Vérification de l’email dans /public/allowlist.json
   async function handleSubmit(e: FormEvent) {
@@ -95,6 +109,21 @@ export default function Home() {
       </Head>
 
       <main className="danseflix-body">
+        {/* NAVBAR CONNEXION */}
+        {unlocked && (
+          <nav className="df-navbar">
+            <div className="df-navbar-content">
+              <div className="df-navbar-user">
+                <span className="df-navbar-label">Connecté en tant que</span>
+                <span className="df-navbar-email">{userEmail}</span>
+              </div>
+              <button className="df-navbar-logout" onClick={handleLogout}>
+                Changer de compte
+              </button>
+            </div>
+          </nav>
+        )}
+
         <div className="df-backdrop">
           <div className="df-overlay-gradient" />
 
@@ -108,9 +137,9 @@ export default function Home() {
                   className="df-logo-main"
                 />
               </div>
-              <div className="df-subtitle">...</div>
+              <div className="df-subtitle">Captations 2025 & 2026</div>
               <div className="df-subsubtitle">
-                spectacle enregistré à la salle des concerts du Mans – Juin 2025
+                Spectacles enregistrés à la salle des concerts du Mans
               </div>
             </header>
 
@@ -124,35 +153,37 @@ export default function Home() {
             >
               <section className="df-intro">
                 <p>
-                  Accès réservé aux familles et élèves. Vous retrouvez ici la
-                  captation de <strong>La Belle au Bois Dormant</strong> pour
-                  les représentations du samedi et du dimanche.
+                  Bienvenue sur DanseFlix ! Vous avez accès aux captations des spectacles auxquels vous avez souscrit. Regardez en qualité HD, aussi souvent que vous le souhaitez.
                 </p>
               </section>
 
-              {/* SAMEDI */}
-              <section className="df-video-block">
-                <h2>Samedi — La Belle au bois dormant</h2>
-                <div className="player">
-                  <iframe
-                    src="https://www.youtube-nocookie.com/embed/0euoXutCxYM?rel=0&modestbranding=1&showinfo=0&disablekb=1&iv_load_policy=3&vq=highres"
-                    title="DanseFlix Samedi"
-                    allow="accelerometer; encrypted-media; gyroscope; picture-in-picture"
-                    allowFullScreen
-                  />
-                </div>
-              </section>
+              {/* ANNÉE 2025 */}
+              <section className="df-year-section">
+                <h3 className="df-year-title">Spectacles 2025</h3>
+                <div className="df-videos-grid">
+                  <div className="df-video-block">
+                    <h4>Samedi — La Belle au bois dormant</h4>
+                    <div className="player">
+                      <iframe
+                        src="https://www.youtube-nocookie.com/embed/0euoXutCxYM?rel=0&modestbranding=1&showinfo=0&disablekb=1&iv_load_policy=3&vq=highres"
+                        title="DanseFlix Samedi 2025"
+                        allow="accelerometer; encrypted-media; gyroscope; picture-in-picture"
+                        allowFullScreen
+                      />
+                    </div>
+                  </div>
 
-              {/* DIMANCHE */}
-              <section className="df-video-block">
-                <h2>Dimanche — La Belle au bois dormant</h2>
-                <div className="player">
-                  <iframe
-                    src="https://www.youtube-nocookie.com/embed/Ky6x74z20N8?rel=0&modestbranding=1&showinfo=0&disablekb=1&iv_load_policy=3&vq=highres"
-                    title="DanseFlix Dimanche"
-                    allow="accelerometer; encrypted-media; gyroscope; picture-in-picture"
-                    allowFullScreen
-                  />
+                  <div className="df-video-block">
+                    <h4>Dimanche — La Belle au bois dormant</h4>
+                    <div className="player">
+                      <iframe
+                        src="https://www.youtube-nocookie.com/embed/Ky6x74z20N8?rel=0&modestbranding=1&showinfo=0&disablekb=1&iv_load_policy=3&vq=highres"
+                        title="DanseFlix Dimanche 2025"
+                        allow="accelerometer; encrypted-media; gyroscope; picture-in-picture"
+                        allowFullScreen
+                      />
+                    </div>
+                  </div>
                 </div>
               </section>
 
@@ -167,80 +198,55 @@ export default function Home() {
           {!unlocked && (
             <div className="df-login-overlay">
               <div className="df-login-card">
-                <h2>Accès privé DanseFlix</h2>
-                <p>
-                  Pour accéder aux vidéos, merci d&apos;entrer{" "}
-                  <strong>l&apos;email utilisé lors de l&apos;achat</strong>.
-                </p>
+                <div className="df-login-header">
+                  <h2>Se connecter à DanseFlix</h2>
+                  <p className="df-login-subtitle">
+                    Entrez votre email pour accéder à vos vidéos
+                  </p>
+                </div>
 
                 <form onSubmit={handleSubmit} className="df-login-form">
-                  <label htmlFor="email">Email utilisé lors du paiement</label>
-                  <input
-                    id="email"
-                    type="email"
-                    required
-                    value={email}
-                    onChange={(e) => setEmail(e.target.value)}
-                    placeholder="prenom.nom@email.com"
-                  />
+                  <div className="df-form-group">
+                    <label htmlFor="email">Email utilisé lors du paiement</label>
+                    <input
+                      id="email"
+                      type="email"
+                      required
+                      value={email}
+                      onChange={(e) => setEmail(e.target.value)}
+                      placeholder="exemple@email.com"
+                      autoFocus
+                    />
+                  </div>
                   {error && <div className="df-error">{error}</div>}
-                  <button type="submit" disabled={checking}>
-                    {checking ? "Vérification en cours…" : "Accéder aux vidéos"}
+                  <button type="submit" disabled={checking} className="df-login-submit">
+                    {checking ? "Vérification en cours…" : "Se connecter"}
                   </button>
                 </form>
 
-                <p className="df-login-help">
-                  Problème d&apos;accès ? Contactez spectramediabots@gmail.com en indiquant votre email.
-                </p>
+                <div className="df-login-help-section">
+                  <p className="df-login-help">
+                    <strong>Besoin d&apos;aide ?</strong><br />
+                    Vérifiez que vous utilisez l&apos;email du paiement.<br />
+                    Contactez : <a href="mailto:spectramediabots@gmail.com">spectramediabots@gmail.com</a>
+                  </p>
+                </div>
 
                 {/* 💳 BOUTON STRIPE D’ACHAT */}
-                <div
-                  style={{
-                    marginTop: 18,
-                    paddingTop: 12,
-                    borderTop: "1px solid rgba(191,219,254,0.35)",
-                  }}
-                >
-                  <p
-                    style={{
-                      fontSize: 12,
-                      margin: "0 0 8px",
-                      opacity: 0.9,
-                    }}
-                  >
-                    Vous n&apos;avez pas encore acheté l&apos;accès à la
-                    plateforme ?
+                <div className="df-purchase-section">
+                  <p className="df-purchase-label">
+                    Pas encore client DanseFlix ?
                   </p>
                   <a
                     href="https://buy.stripe.com/aFabITgIOg31euTe1w3ks01"
                     target="_blank"
                     rel="noreferrer"
-                    style={{
-                      display: "inline-block",
-                      width: "100%",
-                      textAlign: "center",
-                      padding: "9px 14px",
-                      borderRadius: 999,
-                      textDecoration: "none",
-                      fontWeight: 600,
-                      fontSize: 14,
-                      background:
-                        "linear-gradient(135deg,#22c55e,#16a34a,#15803d)",
-                      color: "#0b1020",
-                      boxShadow: "0 14px 40px rgba(15,23,42,0.85)",
-                    }}
+                    className="df-purchase-btn"
                   >
-                    Achetez un accès à la plateforme
+                    Acheter l&apos;accès aux vidéos
                   </a>
-                  <p
-                    style={{
-                      fontSize: 11,
-                      marginTop: 6,
-                      opacity: 0.8,
-                    }}
-                  >
-                    Après le paiement, votre email sera pris en compte pour
-                    l&apos;accès aux vidéos.
+                  <p className="df-purchase-note">
+                    Après le paiement, utilisez votre email pour vous connecter.
                   </p>
                 </div>
               </div>
@@ -272,6 +278,64 @@ export default function Home() {
 
           .danseflix-body {
             min-height: 100vh;
+            position: relative;
+          }
+
+          /* NAVBAR CONNEXION */
+          .df-navbar {
+            position: sticky;
+            top: 0;
+            z-index: 20;
+            background: linear-gradient(
+              180deg,
+              rgba(5, 5, 20, 0.98),
+              rgba(5, 5, 20, 0.95)
+            );
+            border-bottom: 1px solid rgba(59, 130, 246, 0.3);
+            backdrop-filter: blur(10px);
+            padding: 12px 0;
+          }
+          .df-navbar-content {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 28px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 16px;
+          }
+          .df-navbar-user {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 13px;
+          }
+          .df-navbar-label {
+            opacity: 0.7;
+            color: rgba(209, 213, 219, 0.8);
+          }
+          .df-navbar-email {
+            font-weight: 600;
+            color: rgba(59, 130, 246, 0.9);
+            padding: 4px 8px;
+            background: rgba(59, 130, 246, 0.15);
+            border-radius: 6px;
+          }
+          .df-navbar-logout {
+            padding: 6px 14px;
+            font-size: 13px;
+            font-weight: 600;
+            background: rgba(239, 68, 68, 0.2);
+            border: 1px solid rgba(239, 68, 68, 0.5);
+            color: rgba(254, 178, 178, 0.95);
+            border-radius: 6px;
+            cursor: pointer;
+            transition: all 0.2s ease;
+          }
+          .df-navbar-logout:hover {
+            background: rgba(239, 68, 68, 0.3);
+            border-color: rgba(239, 68, 68, 0.7);
+            color: rgba(254, 202, 202, 0.98);
           }
 
           .df-backdrop {
@@ -324,6 +388,7 @@ export default function Home() {
             display: flex;
             flex-direction: column;
             align-items: center;
+            position: relative;
           }
 
           .df-logo-wrapper {
@@ -350,6 +415,36 @@ export default function Home() {
             margin-top: 4px;
             color: rgba(209, 213, 219, 0.9);
             text-shadow: 0 10px 30px rgba(0, 0, 0, 0.8);
+          }
+
+          .df-user-info {
+            margin-top: 16px;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            justify-content: center;
+            font-size: 13px;
+            opacity: 0.85;
+          }
+          .df-user-email {
+            padding: 6px 10px;
+            background: rgba(59, 130, 246, 0.2);
+            border-radius: 8px;
+            border: 1px solid rgba(59, 130, 246, 0.5);
+          }
+          .df-logout-btn {
+            padding: 6px 12px;
+            background: rgba(239, 68, 68, 0.2);
+            border: 1px solid rgba(239, 68, 68, 0.5);
+            border-radius: 8px;
+            color: rgba(254, 202, 202, 0.9);
+            font-size: 12px;
+            cursor: pointer;
+            transition: all 0.2s ease;
+          }
+          .df-logout-btn:hover {
+            background: rgba(239, 68, 68, 0.3);
+            border-color: rgba(239, 68, 68, 0.7);
           }
 
           .df-content {
@@ -388,13 +483,40 @@ export default function Home() {
             margin: 0 0 10px;
           }
 
-          .df-video-block {
-            margin-bottom: 26px;
+          .df-year-section {
+            margin-bottom: 32px;
           }
-          .df-video-block h2 {
+          .df-year-title {
+            margin: 0 0 16px;
+            font-size: 20px;
+            font-weight: 800;
+            color: rgba(255, 255, 255, 0.98);
+            display: flex;
+            align-items: center;
+            gap: 8px;
+          }
+          .df-year-title::before {
+            content: "";
+            width: 3px;
+            height: 24px;
+            background: linear-gradient(135deg, #ff6fb3, #a78bfa);
+            border-radius: 2px;
+          }
+
+          .df-videos-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 20px;
+          }
+
+          .df-video-block {
+            margin-bottom: 0;
+          }
+          .df-video-block h4 {
             margin: 0 0 10px;
-            font-size: 18px;
-            font-weight: 700;
+            font-size: 16px;
+            font-weight: 600;
+            color: rgba(226, 232, 240, 0.95);
           }
 
           .player {
@@ -451,66 +573,157 @@ export default function Home() {
             box-shadow: 0 26px 60px rgba(15, 23, 42, 0.95);
             color: #e5f2ff;
           }
+          .df-login-header {
+            margin-bottom: 20px;
+          }
           .df-login-card h2 {
-            margin: 0 0 8px;
-            font-size: 20px;
+            margin: 0 0 6px;
+            font-size: 24px;
             font-weight: 800;
+            color: #fff;
           }
-          .df-login-card p {
-            margin: 0 0 12px;
+          .df-login-subtitle {
+            margin: 0;
             font-size: 14px;
-            line-height: 1.5;
+            opacity: 0.85;
+            color: rgba(226, 232, 240, 0.9);
           }
+
           .df-login-form {
             display: flex;
             flex-direction: column;
-            gap: 10px;
-            margin-top: 4px;
+            gap: 16px;
+            margin: 20px 0;
           }
+
+          .df-form-group {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+          }
+
           .df-login-form label {
             font-size: 13px;
-            opacity: 0.9;
+            font-weight: 600;
+            opacity: 0.95;
+            color: rgba(226, 232, 240, 0.9);
           }
+
           .df-login-form input {
-            padding: 10px 12px;
+            padding: 12px 14px;
             border-radius: 10px;
-            border: 1px solid rgba(191, 219, 254, 0.9);
-            background: rgba(15, 23, 42, 0.96);
+            border: 1px solid rgba(191, 219, 254, 0.5);
+            background: rgba(15, 23, 42, 0.8);
             color: #e5f2ff;
             font-size: 14px;
             outline: none;
+            transition: all 0.2s ease;
           }
+
           .df-login-form input:focus {
-            box-shadow: 0 0 0 2px rgba(59, 130, 246, 0.8);
+            border-color: rgba(59, 130, 246, 0.9);
+            background: rgba(15, 23, 42, 0.95);
+            box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.2);
           }
-          .df-login-form button {
-            margin-top: 4px;
-            padding: 10px 14px;
+
+          .df-login-submit {
+            padding: 12px 20px;
             border-radius: 999px;
             border: none;
             cursor: pointer;
-            font-weight: 600;
-            font-size: 14px;
+            font-weight: 700;
+            font-size: 15px;
             color: #0b1020;
             background: linear-gradient(135deg, #38bdf8, #4f46e5, #ec4899);
             box-shadow: 0 18px 50px rgba(15, 23, 42, 0.95);
+            transition: all 0.2s ease;
+            margin-top: 8px;
           }
-          .df-login-form button:disabled {
-            opacity: 0.8;
+
+          .df-login-submit:hover:not(:disabled) {
+            transform: translateY(-2px);
+            box-shadow: 0 22px 60px rgba(15, 23, 42, 0.98);
+          }
+
+          .df-login-submit:disabled {
+            opacity: 0.7;
             cursor: progress;
           }
+
           .df-error {
-            font-size: 12px;
+            font-size: 13px;
             color: #fecaca;
-            background: rgba(127, 29, 29, 0.3);
-            border: 1px solid rgba(254, 202, 202, 0.8);
+            background: rgba(127, 29, 29, 0.4);
+            border: 1px solid rgba(254, 202, 202, 0.9);
             border-radius: 8px;
-            padding: 8px 9px;
+            padding: 10px 12px;
+            margin-top: -8px;
           }
+
+          .df-login-help-section {
+            border-top: 1px solid rgba(191, 219, 254, 0.3);
+            padding-top: 16px;
+            margin-top: 16px;
+          }
+
           .df-login-help {
-            margin-top: 8px;
+            margin: 0;
             font-size: 12px;
-            opacity: 0.85;
+            opacity: 0.8;
+            line-height: 1.6;
+            color: rgba(226, 232, 240, 0.85);
+          }
+
+          .df-login-help a {
+            color: rgba(59, 130, 246, 0.9);
+            text-decoration: none;
+            font-weight: 600;
+            transition: color 0.2s ease;
+          }
+
+          .df-login-help a:hover {
+            color: rgba(59, 130, 246, 1);
+            text-decoration: underline;
+          }
+
+          .df-purchase-section {
+            border-top: 1px solid rgba(191, 219, 254, 0.3);
+            padding-top: 16px;
+            margin-top: 16px;
+          }
+
+          .df-purchase-label {
+            margin: 0 0 10px;
+            font-size: 13px;
+            font-weight: 600;
+            color: rgba(226, 232, 240, 0.9);
+          }
+
+          .df-purchase-btn {
+            display: inline-block;
+            width: 100%;
+            text-align: center;
+            padding: 11px 16px;
+            border-radius: 999px;
+            text-decoration: none;
+            font-weight: 700;
+            font-size: 14px;
+            background: linear-gradient(135deg, #22c55e, #16a34a, #15803d);
+            color: #0b1020;
+            box-shadow: 0 14px 40px rgba(15, 23, 42, 0.85);
+            transition: all 0.2s ease;
+          }
+
+          .df-purchase-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 18px 50px rgba(15, 23, 42, 0.95);
+          }
+
+          .df-purchase-note {
+            margin: 8px 0 0;
+            font-size: 11px;
+            opacity: 0.75;
+            color: rgba(209, 213, 219, 0.8);
           }
 
           @media (max-width: 768px) {
